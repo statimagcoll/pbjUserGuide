@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>2 Methods | pbj User’s Guide</title>
+  <meta name="description" content="2 Methods | pbj User’s Guide" />
+  <meta name="generator" content="bookdown 0.25 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="2 Methods | pbj User’s Guide" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="2 Methods | pbj User’s Guide" />
+  
+  
+  
+
+<meta name="author" content="Simon Vandekar, Kaidi Kang, Anna Huang, Neil Woodward" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="introduction.html"/>
+<link rel="next" href="pbj-software-overview.html"/>
+<script src="assets/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="assets/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="assets/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="assets/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="assets/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="assets/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="assets/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="assets/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="assets/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="assets/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="assets/anchor-sections-1.1.0/anchor-sections.js"></script>
+<link href="assets/table1-1.0/table1_defaults.css" rel="stylesheet" />
+<script src="assets/core-js-2.5.3/shim.min.js"></script>
+<script src="assets/react-17.0.0/react.min.js"></script>
+<script src="assets/react-17.0.0/react-dom.min.js"></script>
+<script src="assets/reactwidget-1.0.0/react-tools.js"></script>
+<script src="assets/htmlwidgets-1.5.3/htmlwidgets.js"></script>
+<link href="assets/reactable-0.4.4/reactable.css" rel="stylesheet" />
+<script src="assets/reactable-binding-0.4.4/reactable.js"></script>
+<link href="assets/papaya-0.1449/papaya.css" rel="stylesheet" />
+<link href="assets/papaya-0.1449/base.css" rel="stylesheet" />
+<script src="assets/papaya-0.1449/papaya.js"></script>
+<script src="assets/papaya-0.1449/main.js"></script>
+<script src="assets/papayaWidget-binding-0.7.1/papayaWidget.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="introduction.html#introduction" id="toc-introduction"><span class="toc-section-number">1</span> Introduction<span></span></a></li>
+<li><a href="methods.html#methods" id="toc-methods"><span class="toc-section-number">2</span> Methods<span></span></a>
+<ul>
+<li><a href="methods.html#data-and-data-availability" id="toc-data-and-data-availability"><span class="toc-section-number">2.1</span> Data and data availability<span></span></a>
+<ul>
+<li><a href="methods.html#preprocessed-autism-brain-imaging-data-exchange" id="toc-preprocessed-autism-brain-imaging-data-exchange"><span class="toc-section-number">2.1.1</span> Preprocessed Autism Brain Imaging Data Exchange<span></span></a></li>
+<li><a href="methods.html#twenty-one-pain-studies" id="toc-twenty-one-pain-studies"><span class="toc-section-number">2.1.2</span> Twenty-one pain studies<span></span></a></li>
+<li><a href="methods.html#nathan-kline-institute-rockland-sample" id="toc-nathan-kline-institute-rockland-sample"><span class="toc-section-number">2.1.3</span> Nathan-Kline Institute Rockland Sample<span></span></a></li>
+</ul></li>
+<li><a href="methods.html#pbj-analysis-methods" id="toc-pbj-analysis-methods"><span class="toc-section-number">2.2</span> PBJ analysis methods<span></span></a>
+<ul>
+<li><a href="methods.html#model-estimation" id="toc-model-estimation"><span class="toc-section-number">2.2.1</span> Model estimation<span></span></a></li>
+<li><a href="methods.html#statistical-inference" id="toc-statistical-inference"><span class="toc-section-number">2.2.2</span> Statistical inference<span></span></a></li>
+</ul></li>
+<li><a href="methods.html#evaluation-under-the-global-null-hypothesis" id="toc-evaluation-under-the-global-null-hypothesis"><span class="toc-section-number">2.3</span> Evaluation under the global null hypothesis<span></span></a>
+<ul>
+<li><a href="methods.html#null-synthetic-simulations" id="toc-null-synthetic-simulations"><span class="toc-section-number">2.3.1</span> Null synthetic simulations<span></span></a></li>
+<li><a href="methods.html#null-bootstrap-simulations" id="toc-null-bootstrap-simulations"><span class="toc-section-number">2.3.2</span> Null bootstrap simulations<span></span></a></li>
+</ul></li>
+<li><a href="methods.html#evaluation-under-an-alternative-hypothesis" id="toc-evaluation-under-an-alternative-hypothesis"><span class="toc-section-number">2.4</span> Evaluation under an alternative hypothesis<span></span></a></li>
+<li><a href="methods.html#synthetic-simulations" id="toc-synthetic-simulations"><span class="toc-section-number">2.5</span> Synthetic simulations<span></span></a></li>
+<li><a href="methods.html#bootstrap-simulations" id="toc-bootstrap-simulations"><span class="toc-section-number">2.6</span> Bootstrap simulations<span></span></a></li>
+</ul></li>
+<li><a href="pbj-software-overview.html#pbj-software-overview" id="toc-pbj-software-overview"><span class="toc-section-number">3</span> <code>pbj</code> software overview<span></span></a>
+<ul>
+<li><a href="pbj-software-overview.html#installation" id="toc-installation"><span class="toc-section-number">3.1</span> Installation<span></span></a></li>
+<li><a href="pbj-software-overview.html#analysis-setup" id="toc-analysis-setup"><span class="toc-section-number">3.2</span> Analysis setup<span></span></a></li>
+<li><a href="pbj-software-overview.html#software-structure-and-general-workflow" id="toc-software-structure-and-general-workflow"><span class="toc-section-number">3.3</span> Software structure and general workflow<span></span></a>
+<ul>
+<li><a href="pbj-software-overview.html#lmPBJ" id="toc-lmPBJ"><span class="toc-section-number">3.3.1</span> Model estimation using the <code>lmPBJ</code> function<span></span></a></li>
+<li><a href="pbj-software-overview.html#pbjInference" id="toc-pbjInference"><span class="toc-section-number">3.3.2</span> Statistical inference using the <code>pbjInference</code> function<span></span></a></li>
+</ul></li>
+</ul></li>
+<li><a href="pbj-tutorials.html#pbj-tutorials" id="toc-pbj-tutorials"><span class="toc-section-number">4</span> <code>pbj</code> tutorials<span></span></a>
+<ul>
+<li><a href="pbj-tutorials.html#preprocessed-abide-analysis" id="toc-preprocessed-abide-analysis"><span class="toc-section-number">4.1</span> Preprocessed ABIDE analysis<span></span></a>
+<ul>
+<li><a href="pbj-tutorials.html#whole-brain-exploratory-analysis" id="toc-whole-brain-exploratory-analysis"><span class="toc-section-number">4.1.1</span> Whole-brain exploratory analysis<span></span></a></li>
+<li><a href="pbj-tutorials.html#voxel-wise-analysis-with-lmpbj" id="toc-voxel-wise-analysis-with-lmpbj"><span class="toc-section-number">4.1.2</span> Voxel-wise analysis with <code>lmPBJ</code><span></span></a></li>
+<li><a href="pbj-tutorials.html#topological-inference-maxima-cei-cmi" id="toc-topological-inference-maxima-cei-cmi"><span class="toc-section-number">4.1.3</span> Topological inference (Maxima, CEI, CMI)<span></span></a></li>
+<li><a href="pbj-tutorials.html#interpreting-and-visualizing-pbjinference-results" id="toc-interpreting-and-visualizing-pbjinference-results"><span class="toc-section-number">4.1.4</span> Interpreting and visualizing <code>pbjInference</code> results<span></span></a></li>
+</ul></li>
+<li><a href="pbj-tutorials.html#pain-meta-analysis" id="toc-pain-meta-analysis"><span class="toc-section-number">4.2</span> Pain meta-analysis<span></span></a>
+<ul>
+<li><a href="pbj-tutorials.html#pain-related-activation" id="toc-pain-related-activation"><span class="toc-section-number">4.2.1</span> Pain-related activation<span></span></a></li>
+<li><a href="pbj-tutorials.html#software-related-differences-in-pain-meta-analysis" id="toc-software-related-differences-in-pain-meta-analysis"><span class="toc-section-number">4.2.2</span> Software related differences in pain meta-analysis<span></span></a></li>
+</ul></li>
+<li><a href="pbj-tutorials.html#nki-rs-analysis" id="toc-nki-rs-analysis"><span class="toc-section-number">4.3</span> NKI-RS analysis<span></span></a>
+<ul>
+<li><a href="pbj-tutorials.html#loading-data-and-basic-image-processing" id="toc-loading-data-and-basic-image-processing"><span class="toc-section-number">4.3.1</span> Loading data and basic image processing<span></span></a></li>
+<li><a href="pbj-tutorials.html#model-specification" id="toc-model-specification"><span class="toc-section-number">4.3.2</span> Model specification<span></span></a></li>
+<li><a href="pbj-tutorials.html#visualizing-the-results" id="toc-visualizing-the-results"><span class="toc-section-number">4.3.3</span> Visualizing the results<span></span></a></li>
+<li><a href="pbj-tutorials.html#writing-the-results-and-viewing-interactively" id="toc-writing-the-results-and-viewing-interactively"><span class="toc-section-number">4.3.4</span> Writing the results and viewing interactively<span></span></a></li>
+</ul></li>
+</ul></li>
+<li><a href="statistical-inference-1.html#statistical-inference-1" id="toc-statistical-inference-1"><span class="toc-section-number">5</span> Statistical inference<span></span></a>
+<ul>
+<li><a href="statistical-inference-1.html#running-statistical-inference-for-the-robust-test-statistic-images" id="toc-running-statistical-inference-for-the-robust-test-statistic-images"><span class="toc-section-number">5.1</span> Running statistical inference for the robust test statistic images<span></span></a></li>
+<li><a href="statistical-inference-1.html#ptfce-inference" id="toc-ptfce-inference"><span class="toc-section-number">5.2</span> pTFCE inference<span></span></a></li>
+</ul></li>
+<li><a href="summarizing-the-model-results.html#summarizing-the-model-results" id="toc-summarizing-the-model-results"><span class="toc-section-number">6</span> Summarizing the model results<span></span></a>
+<ul>
+<li><a href="summarizing-the-model-results.html#cluster-tables" id="toc-cluster-tables"><span class="toc-section-number">6.1</span> Cluster tables<span></span></a></li>
+<li><a href="summarizing-the-model-results.html#writing-output-and-interactive-visualization" id="toc-writing-output-and-interactive-visualization"><span class="toc-section-number">6.2</span> Writing output and interactive visualization<span></span></a></li>
+<li><a href="summarizing-the-model-results.html#creating-figures" id="toc-creating-figures"><span class="toc-section-number">6.3</span> Creating figures<span></span></a></li>
+</ul></li>
+<li><a href="null-simulation-results.html#null-simulation-results" id="toc-null-simulation-results"><span class="toc-section-number">7</span> Null simulation results<span></span></a>
+<ul>
+<li><a href="null-simulation-results.html#synthetic-null-simulations" id="toc-synthetic-null-simulations"><span class="toc-section-number">7.1</span> Synthetic null simulations<span></span></a></li>
+<li><a href="null-simulation-results.html#bootstrap-null-simulations-using-a-factor-covariate" id="toc-bootstrap-null-simulations-using-a-factor-covariate"><span class="toc-section-number">7.2</span> Bootstrap null simulations using a factor covariate<span></span></a>
+<ul>
+<li><a href="null-simulation-results.html#marginal-distribution" id="toc-marginal-distribution"><span class="toc-section-number">7.2.1</span> Marginal distribution<span></span></a></li>
+<li><a href="null-simulation-results.html#global-distributions" id="toc-global-distributions"><span class="toc-section-number">7.2.2</span> Global distributions<span></span></a></li>
+</ul></li>
+<li><a href="null-simulation-results.html#simulations-using-a-nonlinear-continuous-covariate" id="toc-simulations-using-a-nonlinear-continuous-covariate"><span class="toc-section-number">7.3</span> Simulations using a nonlinear continuous covariate<span></span></a>
+<ul>
+<li><a href="null-simulation-results.html#marginal-distribution-1" id="toc-marginal-distribution-1"><span class="toc-section-number">7.3.1</span> Marginal distribution<span></span></a></li>
+<li><a href="null-simulation-results.html#global-distributions-1" id="toc-global-distributions-1"><span class="toc-section-number">7.3.2</span> Global distributions<span></span></a></li>
+</ul></li>
+</ul></li>
+<li><a href="references.html#references" id="toc-references"><span class="toc-section-number">8</span> References<span></span></a></li>
+<li><a href="appendix.html#appendix" id="toc-appendix"><span class="toc-section-number">9</span> Appendix<span></span></a></li>
+<li><a href="supplementary-material.html#supplementary-material" id="toc-supplementary-material"><span class="toc-section-number">10</span> Supplementary Material<span></span></a>
+<ul>
+<li><a href="supplementary-material.html#nki-rs-voxel-based-morphometry-processing-and-quality-control" id="toc-nki-rs-voxel-based-morphometry-processing-and-quality-control"><span class="toc-section-number">10.1</span> NKI-RS Voxel-based morphometry processing and quality control<span></span></a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">pbj User’s Guide</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="methods" class="section level1 hasAnchor" number="2">
+<h1><span class="header-section-number">2</span> Methods<a href="methods.html#methods" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="data-and-data-availability" class="section level2 hasAnchor" number="2.1">
+<h2><span class="header-section-number">2.1</span> Data and data availability<a href="methods.html#data-and-data-availability" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="preprocessed-autism-brain-imaging-data-exchange" class="section level3 hasAnchor" number="2.1.1">
+<h3><span class="header-section-number">2.1.1</span> Preprocessed Autism Brain Imaging Data Exchange<a href="methods.html#preprocessed-autism-brain-imaging-data-exchange" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We downloaded fully processed amplitude of low frequency fluctuations (ALFF) <span class="citation">(<a href="#ref-zang_altered_2007" role="doc-biblioref">Zang et al. 2007</a>)</span> from resting state functional magnetic resonance imaging scans for the ABIDE data set from the preprocessed connectomes project REF ().
+The ABIDE is a collaboration of 16 international sites that have aggregated and openly share neuroimaging data from 1,112 scanning sessions, including 539 individuals with autism spectrum disorder <span class="citation">(<a href="#ref-di_martino_autism_2014" role="doc-biblioref">Di Martino et al. 2014</a>)</span>.
+A total of nine subjects were excluded due to poor image quality yielding a study mask with 30,272 voxels.
+This minimal data quality screening was performed in order to maximize the data available for the simulation analyses presented in prior work <span class="citation">(<a href="#ref-vandekar_improving_2021" role="doc-biblioref">S. N. Vandekar and Stephens 2021</a>)</span>.
+These data are available for download through the open connectome website and code to perform the download is available below (Section XX).</p>
+</div>
+<div id="twenty-one-pain-studies" class="section level3 hasAnchor" number="2.1.2">
+<h3><span class="header-section-number">2.1.2</span> Twenty-one pain studies<a href="methods.html#twenty-one-pain-studies" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We will use the <code>pbj</code> package to perform a meta-analysis of statistical maps from 21 pain studies <span class="citation">(<a href="#ref-maumet_sharing_2016" role="doc-biblioref">Maumet et al. 2016</a>; <a href="#ref-gorgolewski_neurovault.org:_2015" role="doc-biblioref">Gorgolewski et al. 2015</a>)</span>.
+These data are available in the <code>pain21</code> R package that is available for download from Neuroconductor <span class="citation">(<a href="#ref-muschelli_neuroconductor:_2018" role="doc-biblioref">Muschelli et al. 2018</a>)</span> using the command <code>source("https://neuroconductor.org/neurocLite.R"); neuro_install('pain21')</code>.</p>
+</div>
+<div id="nathan-kline-institute-rockland-sample" class="section level3 hasAnchor" number="2.1.3">
+<h3><span class="header-section-number">2.1.3</span> Nathan-Kline Institute Rockland Sample<a href="methods.html#nathan-kline-institute-rockland-sample" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Details of data processing and quality assurance are provided in the Supplement. Briefly, prior to processing, 695 people with demographics and T1 images were visually inspected for quality. A total of 14 scans were excluded because they failed processing or had significant motion or artifacts.
+VBM was conducted in the Computational Anatomy Toolbox 12 (CAT12: Version 12.5) in Statistical Parametric Mapping 12 <span class="citation">(<a href="#ref-ashburner_unified_2005" role="doc-biblioref">Ashburner and Friston 2005</a>; <a href="#ref-ashburner_computational_2009" role="doc-biblioref">Ashburner 2009</a>)</span>.
+After estimation the VBM images were registered to the MNI template and downsampled to 2mm isotropic resolution [ashburner_fast_2007].
+To further speed computation for the simulations, we restrict the study region to 11 axial slices in the center of the image, which included 51,925 voxels.</p>
+</div>
+</div>
+<div id="pbj-analysis-methods" class="section level2 hasAnchor" number="2.2">
+<h2><span class="header-section-number">2.2</span> PBJ analysis methods<a href="methods.html#pbj-analysis-methods" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="model-estimation" class="section level3 hasAnchor" number="2.2.1">
+<h3><span class="header-section-number">2.2.1</span> Model estimation<a href="methods.html#model-estimation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+</div>
+<div id="statistical-inference" class="section level3 hasAnchor" number="2.2.2">
+<h3><span class="header-section-number">2.2.2</span> Statistical inference<a href="methods.html#statistical-inference" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="selecting-effect-size-cfts" class="section level4 hasAnchor" number="2.2.2.1">
+<h4><span class="header-section-number">2.2.2.1</span> Selecting effect size CFTs<a href="methods.html#selecting-effect-size-cfts" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+</div>
+</div>
+</div>
+<div id="evaluation-under-the-global-null-hypothesis" class="section level2 hasAnchor" number="2.3">
+<h2><span class="header-section-number">2.3</span> Evaluation under the global null hypothesis<a href="methods.html#evaluation-under-the-global-null-hypothesis" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We use two approaches for assessing the accuracy of the resampling methods when the global null hypothesis is true.
+First we assess the type 1 error rate at thresholds for <span class="math inline">\(\alpha \in \{0.01, 0.05, 0.1, 0.25\}\)</span>.
+This metric is useful to assess how appropriate the resampling method is for performing hypothesis testing.
+For the marginal distributions, we apply BH procedure to the uncorrected p-values and compare the estimated and expected type 1 error rate for each threshold.
+This approach assesses the weak control of the procedure, since the null is true everywhere <span class="citation">(<a href="#ref-lehmann_testing_2005" role="doc-biblioref">Lehmann and Romano 2005</a>)</span>.
+For the global distributions we report the type 1 error rate of the adjusted p-values found by comparing the minimum adjusted p-value across all observed maxima or clusters in each simulation to the <span class="math inline">\(\alpha\)</span> level.</p>
+<div id="null-synthetic-simulations" class="section level3 hasAnchor" number="2.3.1">
+<h3><span class="header-section-number">2.3.1</span> Null synthetic simulations<a href="methods.html#null-synthetic-simulations" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We simulated data under known heteroskedasticity to evaluate how the different resampling inference procedures perform in reproducing the distributions of TFs under the null.
+All resampling methods had near nominal type 1 error rates under homoskedasticity for parametric and robust test statistics, with the permutation and Rademacher bootstrap methods having slightly better accuracy than the normal bootstrap ({}).
+Under heteroskedasticity the permutation procedure had inflated error rates for parametric statistics, but not for robust test statistics. The two bootstrap methods had near nominal type 1 error rates.
+Simply using a robust covariance estimator resolves the problem with the permutation inference procedure because the procedure is scaling out the differences in the variances across subjects in each permutation by computing the square root covariance matrix as a function of the permuted data <span class="math inline">\(\eqref{eq:permutationSampleExchangeability}\)</span>.</p>
+</div>
+<div id="null-bootstrap-simulations" class="section level3 hasAnchor" number="2.3.2">
+<h3><span class="header-section-number">2.3.2</span> Null bootstrap simulations<a href="methods.html#null-bootstrap-simulations" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We use the VBM images form the NKI-RS dataset to generate realistic data under the null: first, we regress out the effects of covariates in the full sample of 682 subjects with complete scans using the model
+<span class="math display">\[\begin{equation}
+\label{eq:simModel}
+Y_{i}(v) = \beta_0(v) +  \beta_1(v)\text{sex}_i + \beta_2(v)\text{race}_{i1} +\beta_3(v)\text{race}_{i2} + f(v, \text{age}_i) + E_i(v),
+\end{equation}\]</span>
+where <span class="math inline">\(\text{sex}_{i}\)</span> and <span class="math inline">\(\text{race}_{ij}\)</span> were indicator variables identifying sex and race (Black, Other, White), and <span class="math inline">\(f\)</span> was a nonlinear function fit with unpenalized natural cubic splines with 10 degrees of freedom using the <code>ns</code> package in <code>R</code>.
+In each simulation we draw a bootstrap sample <span class="math inline">\(Y^b_i(v)\)</span> from the image residuals, <span class="math inline">\(E_i(v)\)</span>, and covariates of model <span class="math inline">\(\eqref{eq:simModel}\)</span>.
+Here, we consider one scenario for testing the association between a covariate and the imaging outcome, and two other types of covariates are described and presented in the Supplementary Material.
+In each bootstrap, we fit the model
+<span class="math display">\[
+Y^b_i(v)  = \beta_0(v) +  \beta_1(v)\text{sex}^b_i + \beta_2(v) \text{age}^b_i + f(\text{fake}_i, v) + E^b_i(v),
+\]</span>
+where <span class="math inline">\(f\)</span> is estimated with unpenalized natural cubic splines on 4 degrees of freedom and tested it against a model with a linear effect of the artificially generated fake covariate yielding a test statistic with 3 degrees of freedom.</p>
+<p>Because we residualized the images to the covariates in the full sample, there is no association between the mean of the images in the sample and the covariate. Because the fake covariate is unassociated with the outcome, homoskedasticity is satisfied (the variance of <span class="math inline">\(E^b_i(v)\)</span> is unassociated with the covariate), but <span class="math inline">\(E^b_i(v)\)</span> still has a realistic covariance structure of the original data.
+Our goal is to understand the how the different resampling methods perform under this realistic setting of heteroskedasticity.</p>
+<p>We use 500 bootstrap-based simulations using 682 Voxel-based morphometry (VBM) outcome images from the NKI-RS to evaluate the methods described above in terms of their finite sample performance in two different scenarios for the three different procedures described above. % (Table <span class="math inline">\(\ref{tab:simulationSetup}\)</span>).
+This low number of simulations is presented with 90% probability intervals because of the computational demand of performing 500 bootstraps for each sample size, resampling method, and test statistic value.
+We consider three sample sizes <span class="math inline">\(n\in \{ 25, 100, 200\}\)</span> and all other simulation settings are as described in Section <span class="math inline">\(\ref{sec:syntheticSimulation}\)</span>.</p>
+</div>
+</div>
+<div id="evaluation-under-an-alternative-hypothesis" class="section level2 hasAnchor" number="2.4">
+<h2><span class="header-section-number">2.4</span> Evaluation under an alternative hypothesis<a href="methods.html#evaluation-under-an-alternative-hypothesis" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+</div>
+<div id="synthetic-simulations" class="section level2 hasAnchor" number="2.5">
+<h2><span class="header-section-number">2.5</span> Synthetic simulations<a href="methods.html#synthetic-simulations" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+</div>
+<div id="bootstrap-simulations" class="section level2 hasAnchor" number="2.6">
+<h2><span class="header-section-number">2.6</span> Bootstrap simulations<a href="methods.html#bootstrap-simulations" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-ashburner_computational_2009" class="csl-entry">
+———. 2009. <span>“Computational Anatomy with the <span>SPM</span> Software.”</span> <em>Magnetic Resonance Imaging</em> 27 (8): 1163–74.
+</div>
+<div id="ref-ashburner_unified_2005" class="csl-entry">
+Ashburner, John, and Karl J. Friston. 2005. <span>“Unified Segmentation.”</span> <em>NeuroImage</em> 26 (3): 839–51. <a href="https://doi.org/10.1016/j.neuroimage.2005.02.018">https://doi.org/10.1016/j.neuroimage.2005.02.018</a>.
+</div>
+<div id="ref-di_martino_autism_2014" class="csl-entry">
+Di Martino, A., C. G. Yan, Q. Li, E. Denio, F. X. Castellanos, K. Alaerts, J. S. Anderson, et al. 2014. <span>“The Autism Brain Imaging Data Exchange: Towards a Large-Scale Evaluation of the Intrinsic Brain Architecture in Autism.”</span> <em>Molecular Psychiatry</em> 19 (6): 659–67. <a href="https://doi.org/10.1038/mp.2013.78">https://doi.org/10.1038/mp.2013.78</a>.
+</div>
+<div id="ref-gorgolewski_neurovault.org:_2015" class="csl-entry">
+Gorgolewski, Krzysztof J., Gael Varoquaux, Gabriel Rivera, Yannick Schwarz, Satrajit S. Ghosh, Camille Maumet, Vanessa V. Sochat, et al. 2015. <span>“<span>NeuroVault</span>.org: A Web-Based Repository for Collecting and Sharing Unthresholded Statistical Maps of the Human Brain.”</span> <em>Frontiers in Neuroinformatics</em> 9. <a href="https://doi.org/10.3389/fninf.2015.00008">https://doi.org/10.3389/fninf.2015.00008</a>.
+</div>
+<div id="ref-lehmann_testing_2005" class="csl-entry">
+Lehmann, Erich L., and Joseph P. Romano. 2005. <em>Testing <span>Statistical</span> <span>Hypotheses</span></em>. 3rd ed. Springer <span>Texts</span> in <span>Statistics</span>. New York: Springer-Verlag. <a href="https://doi.org/10.1007/0-387-27605-X">https://doi.org/10.1007/0-387-27605-X</a>.
+</div>
+<div id="ref-maumet_sharing_2016" class="csl-entry">
+Maumet, Camille, Tibor Auer, Alexander Bowring, Gang Chen, Samir Das, Guillaume Flandin, Satrajit Ghosh, et al. 2016. <span>“Sharing Brain Mapping Statistical Results with the Neuroimaging Data Model.”</span> <em>Scientific Data</em> 3 (December). <a href="https://doi.org/10.1038/sdata.2016.102">https://doi.org/10.1038/sdata.2016.102</a>.
+</div>
+<div id="ref-muschelli_neuroconductor:_2018" class="csl-entry">
+Muschelli, John, Adrian Gherman, Jean-Philippe Fortin, Brian Avants, Brandon Whitcher, Jonathan D. Clayden, Brian S. Caffo, and Ciprian M. Crainiceanu. 2018. <span>“Neuroconductor: An <span>R</span> Platform for Medical Imaging Analysis.”</span> <em>Biostatistics</em>. <a href="https://doi.org/10.1093/biostatistics/kxx068">https://doi.org/10.1093/biostatistics/kxx068</a>.
+</div>
+<div id="ref-vandekar_improving_2021" class="csl-entry">
+Vandekar, Simon N., and Jeremy Stephens. 2021. <span>“Improving the Replicability of Neuroimaging Findings by Thresholding Effect Sizes Instead of p-Values.”</span> <em>Human Brain Mapping</em> 42 (8): 2393–98. <a href="https://doi.org/10.1002/hbm.25374">https://doi.org/10.1002/hbm.25374</a>.
+</div>
+<div id="ref-zang_altered_2007" class="csl-entry">
+Zang, Yu-Feng, He Yong, Zhu Chao-Zhe, Cao Qing-Jiu, Sui Man-Qiu, Liang Meng, Tian Li-Xia, Jiang Tian-Zi, and Wang Yu-Feng. 2007. <span>“Altered Baseline Brain Activity in Children with <span>ADHD</span> Revealed by Resting-State Functional <span>MRI</span>.”</span> <em>Brain and Development</em> 29 (2): 83–91.
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="introduction.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="pbj-software-overview.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="assets/gitbook-2.6.7/js/app.min.js"></script>
+<script src="assets/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="assets/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="assets/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="assets/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="assets/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="assets/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="assets/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": false,
+"toc": {
+"collapse": "subsection"
+},
+"toolbar": {
+"position": "static"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

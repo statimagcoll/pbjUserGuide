@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>pbj User’s Guide</title>
+  <meta name="description" content="pbj User’s Guide" />
+  <meta name="generator" content="bookdown 0.25 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="pbj User’s Guide" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="pbj User’s Guide" />
+  
+  
+  
+
+<meta name="author" content="Simon Vandekar, Kaidi Kang, Anna Huang, Neil Woodward" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+
+<link rel="next" href="methods.html"/>
+<script src="assets/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="assets/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="assets/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="assets/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="assets/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="assets/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="assets/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="assets/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="assets/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="assets/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="assets/anchor-sections-1.1.0/anchor-sections.js"></script>
+<link href="assets/table1-1.0/table1_defaults.css" rel="stylesheet" />
+<script src="assets/core-js-2.5.3/shim.min.js"></script>
+<script src="assets/react-17.0.0/react.min.js"></script>
+<script src="assets/react-17.0.0/react-dom.min.js"></script>
+<script src="assets/reactwidget-1.0.0/react-tools.js"></script>
+<script src="assets/htmlwidgets-1.5.3/htmlwidgets.js"></script>
+<link href="assets/reactable-0.4.4/reactable.css" rel="stylesheet" />
+<script src="assets/reactable-binding-0.4.4/reactable.js"></script>
+<link href="assets/papaya-0.1449/papaya.css" rel="stylesheet" />
+<link href="assets/papaya-0.1449/base.css" rel="stylesheet" />
+<script src="assets/papaya-0.1449/papaya.js"></script>
+<script src="assets/papaya-0.1449/main.js"></script>
+<script src="assets/papayaWidget-binding-0.7.1/papayaWidget.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="introduction.html#introduction" id="toc-introduction"><span class="toc-section-number">1</span> Introduction<span></span></a></li>
+<li><a href="methods.html#methods" id="toc-methods"><span class="toc-section-number">2</span> Methods<span></span></a>
+<ul>
+<li><a href="methods.html#data-and-data-availability" id="toc-data-and-data-availability"><span class="toc-section-number">2.1</span> Data and data availability<span></span></a>
+<ul>
+<li><a href="methods.html#preprocessed-autism-brain-imaging-data-exchange" id="toc-preprocessed-autism-brain-imaging-data-exchange"><span class="toc-section-number">2.1.1</span> Preprocessed Autism Brain Imaging Data Exchange<span></span></a></li>
+<li><a href="methods.html#twenty-one-pain-studies" id="toc-twenty-one-pain-studies"><span class="toc-section-number">2.1.2</span> Twenty-one pain studies<span></span></a></li>
+<li><a href="methods.html#nathan-kline-institute-rockland-sample" id="toc-nathan-kline-institute-rockland-sample"><span class="toc-section-number">2.1.3</span> Nathan-Kline Institute Rockland Sample<span></span></a></li>
+</ul></li>
+<li><a href="methods.html#pbj-analysis-methods" id="toc-pbj-analysis-methods"><span class="toc-section-number">2.2</span> PBJ analysis methods<span></span></a>
+<ul>
+<li><a href="methods.html#model-estimation" id="toc-model-estimation"><span class="toc-section-number">2.2.1</span> Model estimation<span></span></a></li>
+<li><a href="methods.html#statistical-inference" id="toc-statistical-inference"><span class="toc-section-number">2.2.2</span> Statistical inference<span></span></a></li>
+</ul></li>
+<li><a href="methods.html#evaluation-under-the-global-null-hypothesis" id="toc-evaluation-under-the-global-null-hypothesis"><span class="toc-section-number">2.3</span> Evaluation under the global null hypothesis<span></span></a>
+<ul>
+<li><a href="methods.html#null-synthetic-simulations" id="toc-null-synthetic-simulations"><span class="toc-section-number">2.3.1</span> Null synthetic simulations<span></span></a></li>
+<li><a href="methods.html#null-bootstrap-simulations" id="toc-null-bootstrap-simulations"><span class="toc-section-number">2.3.2</span> Null bootstrap simulations<span></span></a></li>
+</ul></li>
+<li><a href="methods.html#evaluation-under-an-alternative-hypothesis" id="toc-evaluation-under-an-alternative-hypothesis"><span class="toc-section-number">2.4</span> Evaluation under an alternative hypothesis<span></span></a></li>
+<li><a href="methods.html#synthetic-simulations" id="toc-synthetic-simulations"><span class="toc-section-number">2.5</span> Synthetic simulations<span></span></a></li>
+<li><a href="methods.html#bootstrap-simulations" id="toc-bootstrap-simulations"><span class="toc-section-number">2.6</span> Bootstrap simulations<span></span></a></li>
+</ul></li>
+<li><a href="pbj-software-overview.html#pbj-software-overview" id="toc-pbj-software-overview"><span class="toc-section-number">3</span> <code>pbj</code> software overview<span></span></a>
+<ul>
+<li><a href="pbj-software-overview.html#installation" id="toc-installation"><span class="toc-section-number">3.1</span> Installation<span></span></a></li>
+<li><a href="pbj-software-overview.html#analysis-setup" id="toc-analysis-setup"><span class="toc-section-number">3.2</span> Analysis setup<span></span></a></li>
+<li><a href="pbj-software-overview.html#software-structure-and-general-workflow" id="toc-software-structure-and-general-workflow"><span class="toc-section-number">3.3</span> Software structure and general workflow<span></span></a>
+<ul>
+<li><a href="pbj-software-overview.html#lmPBJ" id="toc-lmPBJ"><span class="toc-section-number">3.3.1</span> Model estimation using the <code>lmPBJ</code> function<span></span></a></li>
+<li><a href="pbj-software-overview.html#pbjInference" id="toc-pbjInference"><span class="toc-section-number">3.3.2</span> Statistical inference using the <code>pbjInference</code> function<span></span></a></li>
+</ul></li>
+</ul></li>
+<li><a href="pbj-tutorials.html#pbj-tutorials" id="toc-pbj-tutorials"><span class="toc-section-number">4</span> <code>pbj</code> tutorials<span></span></a>
+<ul>
+<li><a href="pbj-tutorials.html#preprocessed-abide-analysis" id="toc-preprocessed-abide-analysis"><span class="toc-section-number">4.1</span> Preprocessed ABIDE analysis<span></span></a>
+<ul>
+<li><a href="pbj-tutorials.html#whole-brain-exploratory-analysis" id="toc-whole-brain-exploratory-analysis"><span class="toc-section-number">4.1.1</span> Whole-brain exploratory analysis<span></span></a></li>
+<li><a href="pbj-tutorials.html#voxel-wise-analysis-with-lmpbj" id="toc-voxel-wise-analysis-with-lmpbj"><span class="toc-section-number">4.1.2</span> Voxel-wise analysis with <code>lmPBJ</code><span></span></a></li>
+<li><a href="pbj-tutorials.html#topological-inference-maxima-cei-cmi" id="toc-topological-inference-maxima-cei-cmi"><span class="toc-section-number">4.1.3</span> Topological inference (Maxima, CEI, CMI)<span></span></a></li>
+<li><a href="pbj-tutorials.html#interpreting-and-visualizing-pbjinference-results" id="toc-interpreting-and-visualizing-pbjinference-results"><span class="toc-section-number">4.1.4</span> Interpreting and visualizing <code>pbjInference</code> results<span></span></a></li>
+</ul></li>
+<li><a href="pbj-tutorials.html#pain-meta-analysis" id="toc-pain-meta-analysis"><span class="toc-section-number">4.2</span> Pain meta-analysis<span></span></a>
+<ul>
+<li><a href="pbj-tutorials.html#pain-related-activation" id="toc-pain-related-activation"><span class="toc-section-number">4.2.1</span> Pain-related activation<span></span></a></li>
+<li><a href="pbj-tutorials.html#software-related-differences-in-pain-meta-analysis" id="toc-software-related-differences-in-pain-meta-analysis"><span class="toc-section-number">4.2.2</span> Software related differences in pain meta-analysis<span></span></a></li>
+</ul></li>
+<li><a href="pbj-tutorials.html#nki-rs-analysis" id="toc-nki-rs-analysis"><span class="toc-section-number">4.3</span> NKI-RS analysis<span></span></a>
+<ul>
+<li><a href="pbj-tutorials.html#loading-data-and-basic-image-processing" id="toc-loading-data-and-basic-image-processing"><span class="toc-section-number">4.3.1</span> Loading data and basic image processing<span></span></a></li>
+<li><a href="pbj-tutorials.html#model-specification" id="toc-model-specification"><span class="toc-section-number">4.3.2</span> Model specification<span></span></a></li>
+<li><a href="pbj-tutorials.html#visualizing-the-results" id="toc-visualizing-the-results"><span class="toc-section-number">4.3.3</span> Visualizing the results<span></span></a></li>
+<li><a href="pbj-tutorials.html#writing-the-results-and-viewing-interactively" id="toc-writing-the-results-and-viewing-interactively"><span class="toc-section-number">4.3.4</span> Writing the results and viewing interactively<span></span></a></li>
+</ul></li>
+</ul></li>
+<li><a href="statistical-inference-1.html#statistical-inference-1" id="toc-statistical-inference-1"><span class="toc-section-number">5</span> Statistical inference<span></span></a>
+<ul>
+<li><a href="statistical-inference-1.html#running-statistical-inference-for-the-robust-test-statistic-images" id="toc-running-statistical-inference-for-the-robust-test-statistic-images"><span class="toc-section-number">5.1</span> Running statistical inference for the robust test statistic images<span></span></a></li>
+<li><a href="statistical-inference-1.html#ptfce-inference" id="toc-ptfce-inference"><span class="toc-section-number">5.2</span> pTFCE inference<span></span></a></li>
+</ul></li>
+<li><a href="summarizing-the-model-results.html#summarizing-the-model-results" id="toc-summarizing-the-model-results"><span class="toc-section-number">6</span> Summarizing the model results<span></span></a>
+<ul>
+<li><a href="summarizing-the-model-results.html#cluster-tables" id="toc-cluster-tables"><span class="toc-section-number">6.1</span> Cluster tables<span></span></a></li>
+<li><a href="summarizing-the-model-results.html#writing-output-and-interactive-visualization" id="toc-writing-output-and-interactive-visualization"><span class="toc-section-number">6.2</span> Writing output and interactive visualization<span></span></a></li>
+<li><a href="summarizing-the-model-results.html#creating-figures" id="toc-creating-figures"><span class="toc-section-number">6.3</span> Creating figures<span></span></a></li>
+</ul></li>
+<li><a href="null-simulation-results.html#null-simulation-results" id="toc-null-simulation-results"><span class="toc-section-number">7</span> Null simulation results<span></span></a>
+<ul>
+<li><a href="null-simulation-results.html#synthetic-null-simulations" id="toc-synthetic-null-simulations"><span class="toc-section-number">7.1</span> Synthetic null simulations<span></span></a></li>
+<li><a href="null-simulation-results.html#bootstrap-null-simulations-using-a-factor-covariate" id="toc-bootstrap-null-simulations-using-a-factor-covariate"><span class="toc-section-number">7.2</span> Bootstrap null simulations using a factor covariate<span></span></a>
+<ul>
+<li><a href="null-simulation-results.html#marginal-distribution" id="toc-marginal-distribution"><span class="toc-section-number">7.2.1</span> Marginal distribution<span></span></a></li>
+<li><a href="null-simulation-results.html#global-distributions" id="toc-global-distributions"><span class="toc-section-number">7.2.2</span> Global distributions<span></span></a></li>
+</ul></li>
+<li><a href="null-simulation-results.html#simulations-using-a-nonlinear-continuous-covariate" id="toc-simulations-using-a-nonlinear-continuous-covariate"><span class="toc-section-number">7.3</span> Simulations using a nonlinear continuous covariate<span></span></a>
+<ul>
+<li><a href="null-simulation-results.html#marginal-distribution-1" id="toc-marginal-distribution-1"><span class="toc-section-number">7.3.1</span> Marginal distribution<span></span></a></li>
+<li><a href="null-simulation-results.html#global-distributions-1" id="toc-global-distributions-1"><span class="toc-section-number">7.3.2</span> Global distributions<span></span></a></li>
+</ul></li>
+</ul></li>
+<li><a href="references.html#references" id="toc-references"><span class="toc-section-number">8</span> References<span></span></a></li>
+<li><a href="appendix.html#appendix" id="toc-appendix"><span class="toc-section-number">9</span> Appendix<span></span></a></li>
+<li><a href="supplementary-material.html#supplementary-material" id="toc-supplementary-material"><span class="toc-section-number">10</span> Supplementary Material<span></span></a>
+<ul>
+<li><a href="supplementary-material.html#nki-rs-voxel-based-morphometry-processing-and-quality-control" id="toc-nki-rs-voxel-based-morphometry-processing-and-quality-control"><span class="toc-section-number">10.1</span> NKI-RS Voxel-based morphometry processing and quality control<span></span></a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">pbj User’s Guide</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="header">
+<h1 class="title">pbj User’s Guide</h1>
+<p class="author"><em>Simon Vandekar, Kaidi Kang, Anna Huang, Neil Woodward</em></p>
+<p class="date"><em>8/3/2023</em></p>
+</div>
+<div id="introduction" class="section level1 hasAnchor" number="1">
+<h1><span class="header-section-number">1</span> Introduction<a href="introduction.html#introduction" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>This book serves as the user manual and technical reference for the <code>pbj</code> <code>R</code> package. <code>pbj</code> can be used to perform various group-level neuroimage analyses in <code>R</code>. Using this package and the tools available through <code>R</code> and Rstudio allows users to perform a fully reproducible group level analysis within <code>R</code> and produce aesthetically attractive html reports.
+This version of the book is a work in progress and there are many incomplete sections.</p>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+
+<a href="methods.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="assets/gitbook-2.6.7/js/app.min.js"></script>
+<script src="assets/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="assets/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="assets/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="assets/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="assets/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="assets/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="assets/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": false,
+"toc": {
+"collapse": "subsection"
+},
+"toolbar": {
+"position": "static"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

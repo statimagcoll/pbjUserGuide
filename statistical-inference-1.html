@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>5 Statistical inference | pbj User’s Guide</title>
+  <meta name="description" content="5 Statistical inference | pbj User’s Guide" />
+  <meta name="generator" content="bookdown 0.25 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="5 Statistical inference | pbj User’s Guide" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="5 Statistical inference | pbj User’s Guide" />
+  
+  
+  
+
+<meta name="author" content="Simon Vandekar, Kaidi Kang, Anna Huang, Neil Woodward" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="pbj-tutorials.html"/>
+<link rel="next" href="summarizing-the-model-results.html"/>
+<script src="assets/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="assets/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="assets/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="assets/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="assets/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="assets/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="assets/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="assets/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="assets/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="assets/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="assets/anchor-sections-1.1.0/anchor-sections.js"></script>
+<link href="assets/table1-1.0/table1_defaults.css" rel="stylesheet" />
+<script src="assets/core-js-2.5.3/shim.min.js"></script>
+<script src="assets/react-17.0.0/react.min.js"></script>
+<script src="assets/react-17.0.0/react-dom.min.js"></script>
+<script src="assets/reactwidget-1.0.0/react-tools.js"></script>
+<script src="assets/htmlwidgets-1.5.3/htmlwidgets.js"></script>
+<link href="assets/reactable-0.4.4/reactable.css" rel="stylesheet" />
+<script src="assets/reactable-binding-0.4.4/reactable.js"></script>
+<link href="assets/papaya-0.1449/papaya.css" rel="stylesheet" />
+<link href="assets/papaya-0.1449/base.css" rel="stylesheet" />
+<script src="assets/papaya-0.1449/papaya.js"></script>
+<script src="assets/papaya-0.1449/main.js"></script>
+<script src="assets/papayaWidget-binding-0.7.1/papayaWidget.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="introduction.html#introduction" id="toc-introduction"><span class="toc-section-number">1</span> Introduction<span></span></a></li>
+<li><a href="methods.html#methods" id="toc-methods"><span class="toc-section-number">2</span> Methods<span></span></a>
+<ul>
+<li><a href="methods.html#data-and-data-availability" id="toc-data-and-data-availability"><span class="toc-section-number">2.1</span> Data and data availability<span></span></a>
+<ul>
+<li><a href="methods.html#preprocessed-autism-brain-imaging-data-exchange" id="toc-preprocessed-autism-brain-imaging-data-exchange"><span class="toc-section-number">2.1.1</span> Preprocessed Autism Brain Imaging Data Exchange<span></span></a></li>
+<li><a href="methods.html#twenty-one-pain-studies" id="toc-twenty-one-pain-studies"><span class="toc-section-number">2.1.2</span> Twenty-one pain studies<span></span></a></li>
+<li><a href="methods.html#nathan-kline-institute-rockland-sample" id="toc-nathan-kline-institute-rockland-sample"><span class="toc-section-number">2.1.3</span> Nathan-Kline Institute Rockland Sample<span></span></a></li>
+</ul></li>
+<li><a href="methods.html#pbj-analysis-methods" id="toc-pbj-analysis-methods"><span class="toc-section-number">2.2</span> PBJ analysis methods<span></span></a>
+<ul>
+<li><a href="methods.html#model-estimation" id="toc-model-estimation"><span class="toc-section-number">2.2.1</span> Model estimation<span></span></a></li>
+<li><a href="methods.html#statistical-inference" id="toc-statistical-inference"><span class="toc-section-number">2.2.2</span> Statistical inference<span></span></a></li>
+</ul></li>
+<li><a href="methods.html#evaluation-under-the-global-null-hypothesis" id="toc-evaluation-under-the-global-null-hypothesis"><span class="toc-section-number">2.3</span> Evaluation under the global null hypothesis<span></span></a>
+<ul>
+<li><a href="methods.html#null-synthetic-simulations" id="toc-null-synthetic-simulations"><span class="toc-section-number">2.3.1</span> Null synthetic simulations<span></span></a></li>
+<li><a href="methods.html#null-bootstrap-simulations" id="toc-null-bootstrap-simulations"><span class="toc-section-number">2.3.2</span> Null bootstrap simulations<span></span></a></li>
+</ul></li>
+<li><a href="methods.html#evaluation-under-an-alternative-hypothesis" id="toc-evaluation-under-an-alternative-hypothesis"><span class="toc-section-number">2.4</span> Evaluation under an alternative hypothesis<span></span></a></li>
+<li><a href="methods.html#synthetic-simulations" id="toc-synthetic-simulations"><span class="toc-section-number">2.5</span> Synthetic simulations<span></span></a></li>
+<li><a href="methods.html#bootstrap-simulations" id="toc-bootstrap-simulations"><span class="toc-section-number">2.6</span> Bootstrap simulations<span></span></a></li>
+</ul></li>
+<li><a href="pbj-software-overview.html#pbj-software-overview" id="toc-pbj-software-overview"><span class="toc-section-number">3</span> <code>pbj</code> software overview<span></span></a>
+<ul>
+<li><a href="pbj-software-overview.html#installation" id="toc-installation"><span class="toc-section-number">3.1</span> Installation<span></span></a></li>
+<li><a href="pbj-software-overview.html#analysis-setup" id="toc-analysis-setup"><span class="toc-section-number">3.2</span> Analysis setup<span></span></a></li>
+<li><a href="pbj-software-overview.html#software-structure-and-general-workflow" id="toc-software-structure-and-general-workflow"><span class="toc-section-number">3.3</span> Software structure and general workflow<span></span></a>
+<ul>
+<li><a href="pbj-software-overview.html#lmPBJ" id="toc-lmPBJ"><span class="toc-section-number">3.3.1</span> Model estimation using the <code>lmPBJ</code> function<span></span></a></li>
+<li><a href="pbj-software-overview.html#pbjInference" id="toc-pbjInference"><span class="toc-section-number">3.3.2</span> Statistical inference using the <code>pbjInference</code> function<span></span></a></li>
+</ul></li>
+</ul></li>
+<li><a href="pbj-tutorials.html#pbj-tutorials" id="toc-pbj-tutorials"><span class="toc-section-number">4</span> <code>pbj</code> tutorials<span></span></a>
+<ul>
+<li><a href="pbj-tutorials.html#preprocessed-abide-analysis" id="toc-preprocessed-abide-analysis"><span class="toc-section-number">4.1</span> Preprocessed ABIDE analysis<span></span></a>
+<ul>
+<li><a href="pbj-tutorials.html#whole-brain-exploratory-analysis" id="toc-whole-brain-exploratory-analysis"><span class="toc-section-number">4.1.1</span> Whole-brain exploratory analysis<span></span></a></li>
+<li><a href="pbj-tutorials.html#voxel-wise-analysis-with-lmpbj" id="toc-voxel-wise-analysis-with-lmpbj"><span class="toc-section-number">4.1.2</span> Voxel-wise analysis with <code>lmPBJ</code><span></span></a></li>
+<li><a href="pbj-tutorials.html#topological-inference-maxima-cei-cmi" id="toc-topological-inference-maxima-cei-cmi"><span class="toc-section-number">4.1.3</span> Topological inference (Maxima, CEI, CMI)<span></span></a></li>
+<li><a href="pbj-tutorials.html#interpreting-and-visualizing-pbjinference-results" id="toc-interpreting-and-visualizing-pbjinference-results"><span class="toc-section-number">4.1.4</span> Interpreting and visualizing <code>pbjInference</code> results<span></span></a></li>
+</ul></li>
+<li><a href="pbj-tutorials.html#pain-meta-analysis" id="toc-pain-meta-analysis"><span class="toc-section-number">4.2</span> Pain meta-analysis<span></span></a>
+<ul>
+<li><a href="pbj-tutorials.html#pain-related-activation" id="toc-pain-related-activation"><span class="toc-section-number">4.2.1</span> Pain-related activation<span></span></a></li>
+<li><a href="pbj-tutorials.html#software-related-differences-in-pain-meta-analysis" id="toc-software-related-differences-in-pain-meta-analysis"><span class="toc-section-number">4.2.2</span> Software related differences in pain meta-analysis<span></span></a></li>
+</ul></li>
+<li><a href="pbj-tutorials.html#nki-rs-analysis" id="toc-nki-rs-analysis"><span class="toc-section-number">4.3</span> NKI-RS analysis<span></span></a>
+<ul>
+<li><a href="pbj-tutorials.html#loading-data-and-basic-image-processing" id="toc-loading-data-and-basic-image-processing"><span class="toc-section-number">4.3.1</span> Loading data and basic image processing<span></span></a></li>
+<li><a href="pbj-tutorials.html#model-specification" id="toc-model-specification"><span class="toc-section-number">4.3.2</span> Model specification<span></span></a></li>
+<li><a href="pbj-tutorials.html#visualizing-the-results" id="toc-visualizing-the-results"><span class="toc-section-number">4.3.3</span> Visualizing the results<span></span></a></li>
+<li><a href="pbj-tutorials.html#writing-the-results-and-viewing-interactively" id="toc-writing-the-results-and-viewing-interactively"><span class="toc-section-number">4.3.4</span> Writing the results and viewing interactively<span></span></a></li>
+</ul></li>
+</ul></li>
+<li><a href="statistical-inference-1.html#statistical-inference-1" id="toc-statistical-inference-1"><span class="toc-section-number">5</span> Statistical inference<span></span></a>
+<ul>
+<li><a href="statistical-inference-1.html#running-statistical-inference-for-the-robust-test-statistic-images" id="toc-running-statistical-inference-for-the-robust-test-statistic-images"><span class="toc-section-number">5.1</span> Running statistical inference for the robust test statistic images<span></span></a></li>
+<li><a href="statistical-inference-1.html#ptfce-inference" id="toc-ptfce-inference"><span class="toc-section-number">5.2</span> pTFCE inference<span></span></a></li>
+</ul></li>
+<li><a href="summarizing-the-model-results.html#summarizing-the-model-results" id="toc-summarizing-the-model-results"><span class="toc-section-number">6</span> Summarizing the model results<span></span></a>
+<ul>
+<li><a href="summarizing-the-model-results.html#cluster-tables" id="toc-cluster-tables"><span class="toc-section-number">6.1</span> Cluster tables<span></span></a></li>
+<li><a href="summarizing-the-model-results.html#writing-output-and-interactive-visualization" id="toc-writing-output-and-interactive-visualization"><span class="toc-section-number">6.2</span> Writing output and interactive visualization<span></span></a></li>
+<li><a href="summarizing-the-model-results.html#creating-figures" id="toc-creating-figures"><span class="toc-section-number">6.3</span> Creating figures<span></span></a></li>
+</ul></li>
+<li><a href="null-simulation-results.html#null-simulation-results" id="toc-null-simulation-results"><span class="toc-section-number">7</span> Null simulation results<span></span></a>
+<ul>
+<li><a href="null-simulation-results.html#synthetic-null-simulations" id="toc-synthetic-null-simulations"><span class="toc-section-number">7.1</span> Synthetic null simulations<span></span></a></li>
+<li><a href="null-simulation-results.html#bootstrap-null-simulations-using-a-factor-covariate" id="toc-bootstrap-null-simulations-using-a-factor-covariate"><span class="toc-section-number">7.2</span> Bootstrap null simulations using a factor covariate<span></span></a>
+<ul>
+<li><a href="null-simulation-results.html#marginal-distribution" id="toc-marginal-distribution"><span class="toc-section-number">7.2.1</span> Marginal distribution<span></span></a></li>
+<li><a href="null-simulation-results.html#global-distributions" id="toc-global-distributions"><span class="toc-section-number">7.2.2</span> Global distributions<span></span></a></li>
+</ul></li>
+<li><a href="null-simulation-results.html#simulations-using-a-nonlinear-continuous-covariate" id="toc-simulations-using-a-nonlinear-continuous-covariate"><span class="toc-section-number">7.3</span> Simulations using a nonlinear continuous covariate<span></span></a>
+<ul>
+<li><a href="null-simulation-results.html#marginal-distribution-1" id="toc-marginal-distribution-1"><span class="toc-section-number">7.3.1</span> Marginal distribution<span></span></a></li>
+<li><a href="null-simulation-results.html#global-distributions-1" id="toc-global-distributions-1"><span class="toc-section-number">7.3.2</span> Global distributions<span></span></a></li>
+</ul></li>
+</ul></li>
+<li><a href="references.html#references" id="toc-references"><span class="toc-section-number">8</span> References<span></span></a></li>
+<li><a href="appendix.html#appendix" id="toc-appendix"><span class="toc-section-number">9</span> Appendix<span></span></a></li>
+<li><a href="supplementary-material.html#supplementary-material" id="toc-supplementary-material"><span class="toc-section-number">10</span> Supplementary Material<span></span></a>
+<ul>
+<li><a href="supplementary-material.html#nki-rs-voxel-based-morphometry-processing-and-quality-control" id="toc-nki-rs-voxel-based-morphometry-processing-and-quality-control"><span class="toc-section-number">10.1</span> NKI-RS Voxel-based morphometry processing and quality control<span></span></a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">pbj User’s Guide</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="statistical-inference-1" class="section level1 hasAnchor" number="5">
+<h1><span class="header-section-number">5</span> Statistical inference<a href="statistical-inference-1.html#statistical-inference-1" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>After computing the parametric or robust statistical image for the test of the nonlinear interaction, we can perform different types of inference. Here, we perform inference two ways, using local maxima and cluster extents.</p>
+<p>We suggest two methods for estimating the null distribution of the test statistic.
+The first is the permutation procedure (similar to <code>randomise</code> by FSL), which has been shown to work well in previous literature (and in our paper; REFS).
+The second is a Rademacher wild bootstrap procedure that we showed to work well in small samples.
+Note that, if using the permutation procedure, the test statistic image is no longer robust to heteroskedasticity, and p-values may not maintain the type 1 error rate.
+That said, in most cases, we have found in simulations that the permutation procedure works very well at controlling the type 1 error rate.
+For a paper, you only need to choose one of the two options. The results should be similar between the two methods. Naturally, we recommend the bootstrap procedure.</p>
+<p>We first set some parameters for the analysis:
+* <code>cft</code> is the cluster forming threshold. This line converges the p-value thresholds to the chi-squared scale.
+* <code>nboot</code> is the number of bootstraps or permutations to run. These are used to compute adjusted and unadjusted p-values.</p>
+<div class="sourceCode" id="cb313"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb313-1"><a href="statistical-inference-1.html#cb313-1" aria-hidden="true" tabindex="-1"></a><span class="co"># cluster extent inference</span></span>
+<span id="cb313-2"><a href="statistical-inference-1.html#cb313-2" aria-hidden="true" tabindex="-1"></a><span class="do">## cluster forming threshold</span></span>
+<span id="cb313-3"><a href="statistical-inference-1.html#cb313-3" aria-hidden="true" tabindex="-1"></a>cft <span class="ot">=</span> <span class="fu">c</span>(<span class="fl">0.01</span>, <span class="fl">0.001</span>)</span>
+<span id="cb313-4"><a href="statistical-inference-1.html#cb313-4" aria-hidden="true" tabindex="-1"></a><span class="co"># number of bootstraps (or permutations) to run</span></span>
+<span id="cb313-5"><a href="statistical-inference-1.html#cb313-5" aria-hidden="true" tabindex="-1"></a>nboot<span class="ot">=</span><span class="dv">5000</span></span></code></pre></div>
+<div id="running-statistical-inference-for-the-robust-test-statistic-images" class="section level2 hasAnchor" number="5.1">
+<h2><span class="header-section-number">5.1</span> Running statistical inference for the robust test statistic images<a href="statistical-inference-1.html#running-statistical-inference-for-the-robust-test-statistic-images" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>There are many different options for performing inference for neuroimaging data and the <code>pbjInference</code> function can accommodate a wide range of possibilities.
+Below are several examples of ways to run <code>pbjInference</code>. It is best to include any inference methods you want to consider, so that you don’t have to rerun the bootstrap or permutation procedure each time.
+Here are some key arguments to the <code>pbjInference</code>:
+* <code>statMap</code> is the object returned by lmPBJ.
+* <code>statistic</code> is a function used to compute common topological features of the image.
+* <code>nboot</code> is the number of bootstraps to perform.
+* <code>method</code> controls what resampling procedure to use.
+* <code>...</code> arguments passed to the <code>statistic</code> function.
+* <code>runMode</code> controls what output is returned. Default is “cdf”, which returns the cumulative distribution functions used to compute adjusted and unadjusted p-values for each topological feature.</p>
+<p>The <code>mmeStat</code> function is the default <code>statistic</code> function for <code>pbjInference</code> and includes options to run inference on the most common types of topological features, including local maxima, cluster mass inference, and cluster extent inference.
+To perform cluster extent inference (the default), the <code>mmeStat</code> function requires that the user specify a vector <code>cft</code>, which are the thresholds to use to form contiguous clusters in the statistic image. This is passed to <code>pbjInference</code> by the user.
+The final command saves the results in an Rdata file for future use.</p>
+<p>In the code below, we use the <code>pbjInference</code> command to run the boostrapping in the background. This uses the <code>r_bg</code> function from the <code>callr</code> package to run the command in the background, so that we can continue to use this session.</p>
+<div class="sourceCode" id="cb314"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb314-1"><a href="statistical-inference-1.html#cb314-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">file.exists</span>(pbjdatafile)){</span>
+<span id="cb314-2"><a href="statistical-inference-1.html#cb314-2" aria-hidden="true" tabindex="-1"></a>  rcallResPBJ <span class="ot">&lt;-</span> <span class="fu">pbjInference</span>(robustStatMap, <span class="at">rdata_rds=</span>pbjdatafile, <span class="at">nboot =</span> nboot, <span class="at">method=</span><span class="st">&#39;wild&#39;</span>, <span class="at">mask =</span> robustStatMap<span class="sc">$</span>mask, <span class="at">cft_p =</span> cft)</span>
+<span id="cb314-3"><a href="statistical-inference-1.html#cb314-3" aria-hidden="true" tabindex="-1"></a>  rcallResPBJ<span class="sc">$</span><span class="fu">ps_cpu_times</span>()</span>
+<span id="cb314-4"><a href="statistical-inference-1.html#cb314-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb314-5"><a href="statistical-inference-1.html#cb314-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb314-6"><a href="statistical-inference-1.html#cb314-6" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">file.exists</span>(permdatafile)){</span>
+<span id="cb314-7"><a href="statistical-inference-1.html#cb314-7" aria-hidden="true" tabindex="-1"></a>  rcallResPerm <span class="ot">&lt;-</span> <span class="fu">pbjInferenceBG</span>(robustStatMap, <span class="at">rdata_rds=</span>permdatafile, <span class="at">nboot =</span> nboot, <span class="at">method=</span><span class="st">&#39;permutation&#39;</span>, <span class="at">mask =</span> robustStatMap<span class="sc">$</span>mask, <span class="at">cft_p =</span> cft)</span>
+<span id="cb314-8"><a href="statistical-inference-1.html#cb314-8" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>Below is the standard called to <code>pbjInference</code> that runs in this session (not in the background).
+This run will perform inference on local maxima and cluster mass statistics.</p>
+<div class="sourceCode" id="cb315"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb315-1"><a href="statistical-inference-1.html#cb315-1" aria-hidden="true" tabindex="-1"></a><span class="co"># computes cluster mass inference, and inference for maxima. Does not compute CEI</span></span>
+<span id="cb315-2"><a href="statistical-inference-1.html#cb315-2" aria-hidden="true" tabindex="-1"></a>maximaCEIstatMap <span class="ot">&lt;-</span> <span class="fu">pbjInference</span>(robustStatMap, <span class="at">nboot =</span> nboot, <span class="at">method=</span><span class="st">&#39;wild&#39;</span>, <span class="at">mask =</span> robustStatMap<span class="sc">$</span>mask, <span class="at">cft_p =</span> cft, <span class="at">max=</span><span class="cn">TRUE</span>, <span class="at">CMI=</span><span class="cn">TRUE</span>, <span class="at">CEI=</span><span class="cn">FALSE</span>)</span></code></pre></div>
+<p>The following code loads in the results of the call to <code>pbjInferenceBG</code>. The resulting object is the <code>statMap</code> object from the call to <code>lmPBJ</code>, with the inference results added.</p>
+<div class="sourceCode" id="cb316"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb316-1"><a href="statistical-inference-1.html#cb316-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">file.exists</span>(permdatafile)){</span>
+<span id="cb316-2"><a href="statistical-inference-1.html#cb316-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">load</span>(permdatafile)</span>
+<span id="cb316-3"><a href="statistical-inference-1.html#cb316-3" aria-hidden="true" tabindex="-1"></a>  permStatMap <span class="ot">&lt;-</span> statMap</span>
+<span id="cb316-4"><a href="statistical-inference-1.html#cb316-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb316-5"><a href="statistical-inference-1.html#cb316-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">file.exists</span>(pbjdatafile)){</span>
+<span id="cb316-6"><a href="statistical-inference-1.html#cb316-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">load</span>(pbjdatafile)</span>
+<span id="cb316-7"><a href="statistical-inference-1.html#cb316-7" aria-hidden="true" tabindex="-1"></a>  robustStatMap <span class="ot">&lt;-</span> statMap</span>
+<span id="cb316-8"><a href="statistical-inference-1.html#cb316-8" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+<div id="ptfce-inference" class="section level2 hasAnchor" number="5.2">
+<h2><span class="header-section-number">5.2</span> pTFCE inference<a href="statistical-inference-1.html#ptfce-inference" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>This code performs probabilistic threshold free cluster enhancement (pTFCE) inference using the <code>pTFCE</code> package.
+It doesn’t use resampling and instead relies on GRF-based methods.
+We showed using simulations that it seems to work pretty well in large samples.</p>
+<div class="sourceCode" id="cb317"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb317-1"><a href="statistical-inference-1.html#cb317-1" aria-hidden="true" tabindex="-1"></a>pbj<span class="sc">::</span><span class="fu">ptfce.statmap</span>(robustStatMap)</span></code></pre></div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="pbj-tutorials.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="summarizing-the-model-results.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="assets/gitbook-2.6.7/js/app.min.js"></script>
+<script src="assets/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="assets/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="assets/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="assets/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="assets/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="assets/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="assets/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": false,
+"toc": {
+"collapse": "subsection"
+},
+"toolbar": {
+"position": "static"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

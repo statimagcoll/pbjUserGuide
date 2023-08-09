@@ -1,0 +1,1874 @@
+---
+title: "pbj User's Guide"
+author: "Simon Vandekar, Kaidi Kang, Anna Huang, Neil Woodward"
+date: "8/3/2023"
+output:
+  bookdown::gitbook:
+    lib_dir: assets
+    split_by: chapter
+    config:
+      toolbar:
+        position: static
+  bookdown::pdf_book:
+    keep_tex: true
+  bookdown::html_book:
+    css: toc.css
+documentclass: book
+bibliography: ../inst/MyLibrary.bib
+link-citations: yes
+---
+
+```{r knitrSetup, echo=FALSE}
+knitr::knit_hooks$set(GPs=function(before, options, envir){
+  if (before){
+    cex=1.5
+    # graphical parameters
+    fgcol = 'black'
+    bgcol = 'white'
+    par(mgp=c(0.9,.7,0), lwd=1.5, lend=2,
+        cex.lab=cex, cex.axis=0.8*cex, cex.main=cex,
+        mar=c(0.5,0.5,0.5,0), bty='l', oma=c(0,0,0,0), bg=bgcol, fg=fgcol, col.axis=fgcol, col.lab=fgcol, col.main = fgcol, col.sub=fgcol)
+  }})
+knitr::opts_chunk$set(echo = TRUE, GPs=TRUE, cache=FALSE, cache.lazy=FALSE, eval=TRUE, out.width = "100%")
+path = Sys.getenv('PATH')
+path = Sys.setenv('PATH'=paste(path, '/home/rstudio/.local/bin', sep=':'))
+```
+
+# Introduction
+
+
+This book serves as the user manual and technical reference for the `pbj` `R` package. `pbj` can be used to perform various group-level neuroimage analyses in `R`. Using this package and the tools available through `R` and Rstudio allows users to perform a fully reproducible group level analysis within `R` and produce aesthetically attractive html reports.
+This version of the book is a work in progress and there are many incomplete sections.
+
+
+
+# Methods
+
+## Data and data availability
+
+### Preprocessed Autism Brain Imaging Data Exchange
+
+We downloaded fully processed amplitude of low frequency fluctuations (ALFF) [@zang_altered_2007] from resting state functional magnetic resonance imaging scans for the ABIDE data set from the preprocessed connectomes project REF (\url{http://preprocessed-connectomes-project.org/}).
+The ABIDE is a collaboration of 16 international sites that have aggregated and openly share neuroimaging data from 1,112 scanning sessions, including 539 individuals with autism spectrum disorder [@di_martino_autism_2014].
+A total of nine subjects were excluded due to poor image quality yielding a study mask with 30,272 voxels.
+This minimal data quality screening was performed in order to maximize the data available for the simulation analyses presented in prior work [@vandekar_improving_2021].
+These data are available for download through the open connectome website and code to perform the download is available below (Section XX).
+
+### Twenty-one pain studies
+
+We will use the `pbj` package to perform a meta-analysis of statistical maps from 21 pain studies [@maumet_sharing_2016; @gorgolewski_neurovault.org:_2015].
+These data are available in the `pain21` R package that is available for download from Neuroconductor [@muschelli_neuroconductor:_2018] using the command `source("https://neuroconductor.org/neurocLite.R"); neuro_install('pain21')`.
+
+### Nathan-Kline Institute Rockland Sample
+
+Details of data processing and quality assurance are provided in the Supplement. Briefly, prior to processing, 695 people with demographics and T1 images were visually inspected for quality. A total of 14 scans were excluded because they failed processing or had significant motion or artifacts.
+VBM was conducted in the Computational Anatomy Toolbox 12 (CAT12: Version 12.5) in Statistical Parametric Mapping 12  [@ashburner_unified_2005; @ashburner_computational_2009].
+After estimation the VBM images were registered to the MNI template and downsampled to 2mm isotropic resolution [ashburner_fast_2007].
+To further speed computation for the simulations, we restrict the study region to 11 axial slices in the center of the image, which included 51,925 voxels.
+
+
+
+## PBJ analysis methods
+
+### Model estimation
+
+### Statistical inference
+
+
+#### Selecting effect size CFTs
+
+## Evaluation under the global null hypothesis
+
+We use two approaches for assessing the accuracy of the resampling methods when the global null hypothesis is true.
+First we assess the type 1 error rate at thresholds for $\alpha \in \{0.01, 0.05, 0.1, 0.25\}$.
+This metric is useful to assess how appropriate the resampling method is for performing hypothesis testing.
+For the marginal distributions, we apply BH procedure to the uncorrected p-values and compare the estimated and expected type 1 error rate for each threshold.
+This approach assesses the weak control of the procedure, since the null is true everywhere [@lehmann_testing_2005].
+For the global distributions we report the type 1 error rate of the adjusted p-values found by comparing the minimum adjusted p-value across all observed maxima or clusters in each simulation to the $\alpha$ level.
+
+### Null synthetic simulations
+
+We simulated data under known heteroskedasticity to evaluate how the different resampling inference procedures perform in reproducing the distributions of TFs under the null.
+All resampling methods had near nominal type 1 error rates under homoskedasticity for parametric and robust test statistics, with the permutation and Rademacher bootstrap methods having slightly better accuracy than the normal bootstrap ({\bf Figure \ref{fig:synthSim}}).
+Under heteroskedasticity the permutation procedure had inflated error rates for parametric statistics, but not for robust test statistics. The two bootstrap methods had near nominal type 1 error rates.
+Simply using a robust covariance estimator resolves the problem with the permutation inference procedure because the procedure is scaling out the differences in the variances across subjects in each permutation by computing the square root covariance matrix as a function of the permuted data \eqref{eq:permutationSampleExchangeability}.
+
+### Null bootstrap simulations
+
+We use the VBM images form the NKI-RS dataset to generate realistic data under the null: first, we regress out the effects of covariates in the full sample of 682 subjects with complete scans using the model
+\begin{equation}
+\label{eq:simModel}
+Y_{i}(v) = \beta_0(v) +  \beta_1(v)\text{sex}_i + \beta_2(v)\text{race}_{i1} +\beta_3(v)\text{race}_{i2} + f(v, \text{age}_i) + E_i(v),
+\end{equation}
+where $\text{sex}_{i}$ and $\text{race}_{ij}$ were indicator variables identifying sex and race (Black, Other, White), and $f$ was a nonlinear function fit with unpenalized natural cubic splines with 10 degrees of freedom using the `ns` package in `R`.
+In each simulation we draw a bootstrap sample $Y^b_i(v)$ from the image residuals, $E_i(v)$, and covariates of model \eqref{eq:simModel}.
+Here, we consider one scenario for testing the association between a covariate and the imaging outcome, and two other types of covariates are described and presented in the Supplementary Material.
+In each bootstrap, we fit the model
+\[
+Y^b_i(v)  = \beta_0(v) +  \beta_1(v)\text{sex}^b_i + \beta_2(v) \text{age}^b_i + f(\text{fake}_i, v) + E^b_i(v),
+\]
+where $f$ is estimated with unpenalized natural cubic splines on 4 degrees of freedom and tested it against a model with a linear effect of the artificially generated fake covariate yielding a test statistic with 3 degrees of freedom.
+
+Because we residualized the images to the covariates in the full sample, there is no association between the mean of the images in the sample and the covariate. Because the fake covariate is unassociated with the outcome, homoskedasticity is satisfied (the variance of $E^b_i(v)$ is unassociated with the covariate), but $E^b_i(v)$ still has a realistic covariance structure of the original data.
+Our goal is to understand the how the different resampling methods perform under this realistic setting of heteroskedasticity.
+
+We use 500 bootstrap-based simulations using 682 Voxel-based morphometry (VBM) outcome images from the NKI-RS to evaluate the methods described above in terms of their finite sample performance in two different scenarios for the three different procedures described above. % (Table \ref{tab:simulationSetup}).
+This low number of simulations is presented with 90\% probability intervals because of the computational demand of performing 500 bootstraps for each sample size, resampling method, and test statistic value.
+We consider three sample sizes $n\in \{ 25, 100, 200\}$ and all other simulation settings are as described in Section \ref{sec:syntheticSimulation}.
+
+
+
+## Evaluation under an alternative hypothesis
+
+
+## Synthetic simulations
+
+## Bootstrap simulations
+
+
+
+
+# `pbj` software overview
+
+
+## Installation 
+
+The latest stable version of the `pbj` package can be installed from github.
+
+```{r installPackage, eval=FALSE}
+# install the latest version of the package from github.
+devtools::install_github('statimagcoll/pbj')
+```
+
+## Analysis setup
+
+This first step is to load `R` packages for performing interactive image analysis.
+
+* The `pbj` package includes our functions needed to perform group level neuroimage analysis.
+* The `papayaWidget` package is used to embed interactive visualizations into this html document.
+
+The `pbj` package includes dependencies for the following [Neuroconductor](www.neuroconductor.org) packages
+
+* The `RNifti` package for Nifti image I/O.
+* `oro.nifti` package for Nifti image I/O.
+* The `fslr` package includes wrappers for command line tools included in FSL, which will be used to perform some basic preprocessing.
+
+In addition, we setup some variables used for all analyses: `ncores` specifies the number of cores to use when running parallel processes and setting the seed for the RNG ensures the results are reproducible.
+
+```{r, loadLibraries, message=FALSE}
+### LIBRARIES ###
+library(pbj) # pbj package
+library(RNifti) # Nifti I/O. Loaded with pbj
+library(fslr) # for FSL utilities
+library(papayaWidget) # image viewer
+library(splines) # ns
+library(table1) # convenient table creation
+library(parallel) # for parallelization
+library(magrittr) # %>%
+
+# number of cores for parallel processing
+ncores = 16
+# seed for randomization
+set.seed(555)
+```
+
+It is easiest to compile all the files needed for the analysis into a few `R` objects.
+To perform the analysis, we need the following data
+
+* The data file that includes
+  1. All covariates required for the analysis.
+  2. Paths to the `.nii.gz` images we will analyze, assumed to be spatially registered to template space.
+* The mask to identify voxels to include in the analysis.
+* A template image to use as the background for visualizing the results.
+
+We recommend storing the image paths as a column in a data frame with the covariates, so that correspondence between the outcome and covariates is retained throughout the analysis.
+
+## Software structure and general workflow
+
+The key functions of the package are for model estimation, statistical inference, summarization, visualization, and I/O.
+
+**Model estimation:**
+
+* [`lmPBJ`](#lmPBJ) -- the main function to estimate test statistics and coefficients for comparing two models.
+
+**Statistical inference:**
+
+* [`pbjInference`](#pbjInference) -- the main function to perform inference on topological features of the test statistic image.
+* `cluster` -- computes cluster statistics, such as cluster extent and cluster mass from a `niftiImage` object.
+* `maxima` -- computes global or local maxima statistics from a `niftiImage` object.
+* `mmeStat` -- computes maxima, mass, or extent statistics from a `niftiImage` object.
+
+**Summarization:**
+
+* `table.statMap` -- create maxima/mass/cluster summary table.
+* `summary.statMap` -- summarize the `statMap` object in terminal.
+
+**Visualization:**
+
+* `image.statMap` -- lightbox visualization (and others) of `statMap` object.
+* `image.niftiImage` -- lightbox visualization (and others) of `niftiImage` class, defined in `RNifti` package.
+
+
+**I/O:**
+
+* `stat.statMap` -- extract statistical image as `-log10(p)`, effect size (robust effect size index; RESI), or chi-squared statistic from `statMap` object as a `niftiImage` object.
+* `coef.statMap` -- extract 4d coefficient image from `statMap` object as a `niftiImage` object. Coefficients correspond to the parameters tested by comparing the full and reduced models.
+*  `write.statMap` -- write out files in `statMap` object to a specified directory.
+
+### Model estimation using the `lmPBJ` function {#lmPBJ}
+
+The `lmPBJ` function fits linear models to imaging data and computes test statistics for parameters of interest.
+The `pbj` package uses `R`'s `formula` syntax to specify models of imaging data using the full/reduced model specification to test variables in the data set.
+The full model, `lmfull`, specifies a formula that includes all model terms.
+There is no left side to the equation (the dependent/outcome variable) because it is determined by the imaging variables.
+Comparing `lmfull` to `lmred` will test the terms of the full model that are related to the interaction.
+The `mask` image identifies which voxels in the image to include in the analysis.
+The `template` image is used as the background image for visualization later.
+
+There are many other options to adjust how to fit the model and compute test statistics; statistical details are given above in [PBJ analysis methods].
+The 
+Unlike the parametric Gaussian random field methods implemented in many software packages, the methods used in `pbj` yield cluster extent p-values that are valid regardless of data smoothness, or cluster-forming threshold (CFT) and perform well in small samples.
+`pbj` also supports the permutation procedure similar to what is implemented in FSL's `randomise` [@winkler_permutation_2014].
+
+* `id` -- for longitudinal or repeated measurements an integer or factor variable indicating which rows come from the same study participants.
+* `robust` -- a logical specifying whether robust standard errors should be used, which makes the test statistics valid even under some types of model
+misspecification. The robust test statistic ensures that the standard errors are consistently estimated, even if homoskedasticity is violated. It reduces replicability slightly at the cost of reducing bias of the test statistic, $p$-values, and effect sizes estimates (Section REF).
+* `transform` -- Use and inverse CDF transformation to make the test statistics appear closer to a normal distribution in small sample sizes. This is a sensible transformation if the null hypothesis is true, but might not be a good idea if the null is false.
+* `HC3` -- whether to use a small sample adjustment to the robust standard error estimates that improves coverage performance (it makes the test statistics appear closer to a normal distribution).
+
+The result of `lmPBJ` is a `statMap` object, which is a `list` containing all the elements needed for visualization and downstream analysis. At this stage, uncorrected results can be summarized and visualized using the functions described above.
+The statistical values are stored as chi-squared statistics because this is the most general random variable use for statistical inference.
+
+### Statistical inference using the `pbjInference` function {#pbjInference}
+
+There are many different options for performing inference of topological features for neuroimaging data and the `pbjInference` function can accommodate a wide range of possibilities.
+It is best to include any inference methods you want to consider all together, so that you don't have to rerun the bootstrap or permutation procedure each time.
+Here are some key arguments to the `pbjInference`:
+
+* `statMap` -- the object returned by lmPBJ.
+* `statistic` -- a function used to compute common topological features of the image.
+* `null` -- whether to perform resampling under the null or alternative hypothesis.
+* `nboot` -- the number of bootstraps to perform.
+* `method` -- controls what resampling procedure to use.
+* `cft_s`, `cft_p`, `cft_chisq` -- cluster forming threshold, used to compute a `cft` variable that is an argument to the `statistic` function.
+* `...` -- arguments passed to the `statistic` function.
+* `rdata_rds` -- a file to write the output to. If specified, it will run the bootstrap in the background.
+* `mc.cores` -- the number of cores to use for parallelization.
+
+After the `statMap` argument, the `statistic` function is the most important argument, because it determines what type of topological features to perform inference on.
+The `statistic` argument is a function itself, that takes a `niftiImage` object as the first argument and computes some topological feature of the image and returns them as a named list.
+It, optionally, includes other arguments to modify its behavior. These arguments can be specified when running `pbjInference` by passing them as named arguments.
+The `mmeStat` function is the default value for the `statistic` argument of `pbjInference` and includes options to run inference on the most common types of topological features, including local maxima, cluster mass inference, and cluster extent inference. There are also the functions `maxima` and `cluster` that can be used to compute local maxima or cluster-based statistics separately.
+The `statistic` function can take `mask` and `cft` arguments.
+The `mask` is automatically assigned from the `statMap` object and the `cft` argument is determined automatically by the `cft_s` and `cft_p` arguments in `pbjInference`.
+Because cluster based inference is so common, there are convenience arguments that take a cluster forming threshold as an effect size (`cft_s`; on the RESI scale [@vandekar_robust_2020;@kang_accurate_2023]), a $p$-value (`cft_p`), or a chi-squared value (`cft_chisq`).
+These arguments are converted to a `cft` variable internally that is on the chi-squared statistical scale.
+These arguments are optional if the topological feature is not a function of an image threshold.
+For topological features that use the `cft` variable this is stored as an attribute of that element of the `statistic` output, which is used for visualization later.
+
+The result is the input `statMap` object, with a `pbj` object added as an element in the list.
+Summarization and visualization functions check for the `pbj` field and provide inference results based on what fields are available.
+
+
+# `pbj` tutorials
+
+This section covers three analysis examples. Each is meant to be standalone with references to the earlier sections of the paper.
+
+
+
+## Preprocessed ABIDE analysis
+
+We will perform an analysis of functional connectivity differences between typically developing individuals and those with autism spectrum disorders as measured by amplitude of low frequency fluctuations (ALFF; REF).
+The following code chunk downloads the data set. The function `downloadABIDE` is available in the `NIsim` `R` package that's available to install from github.
+
+```{r ABIDEsetup, message=FALSE}
+# install the latest version of the NIsim package, which includes a function to download the preprocessed ABIDE data.
+# devtools::install_github('statimagcoll/NIsim', ref='master')
+
+### LIBRARIES ###
+library(RNifti)
+library(parallel)
+library(splines)
+library(progress)
+library(pbj)
+library(NIsim)
+
+### DATA LOCATION ###
+datadir = dirname(tempdir())
+derivative='falff'
+# will be created by downloadABIDE
+dbimagedir = file.path(datadir, 'abide/neuroimaging/cpac', derivative)
+templatefile = file.path(datadir, 'abide/neuroimaging/MNI152_T1_3mm.nii.gz')
+# created by simSetup... Not used in this analysis
+dbresimagedir = file.path(datadir, 'abide/neuroimaging/cpac/alff_res')
+# created below
+maskfile = file.path(datadir, 'abide/neuroimaging/cpac/mask.nii.gz')
+
+# load in data and get directories
+dat = downloadABIDE(datadir, derivatives=derivative)
+# some data curation is done on download. Subset all pass on visual inspection and making sex and dx factors, remove rows with no file name
+dat$imgname = paste(dat$file_id, paste0(derivative, '.nii.gz'), sep='_')
+dat$files = file.path(dbimagedir, dat$imgname)
+```
+
+After downloading the data, we create a study specific mask based on the subset of the data where all subjects have coverage. We make a small number of exclusions to increase the coverage above 30,000 voxels at 3mm isotropic resolution.
+
+```{r, ABIDEcreateMask, cache=TRUE, message=TRUE, fig.width=4, fig.height=4}
+imgs = simplify2array(readNifti(dat$files) )
+# choose
+# number of people with zeros at that location
+inds=numeric()
+ids = c()
+subids = dat$sub_id
+# number of voxels with no zeros
+nnzero = 0
+# iteratively removes subjects who will increase the mask the largest
+while(nnzero<30000){
+  voxSums = rowSums(imgs==0, dims=3)
+  tab = as.data.frame(table(voxSums))
+  
+  nnzero=tab[1,2]
+  # number of unique voxels for each subject
+  uniquevox = apply(imgs, 4, function(img) sum(img==0 & voxSums==1) )
+  # number of subjects to remove based on those subjects decreasing the amount of unique zero voxels by 50%
+  #ind = which(cumsum(sort(uniquevox[ uniquevox>0], decreasing = TRUE))/tab$Freq[2]>0.5)[1]
+  #inds = which(uniquevox>=sort(uniquevox, decreasing = TRUE)[ind])
+  inds = which.max(uniquevox)
+  cat('\nIteration:\nsubject removed: ', paste(subids[inds], collapse=', '), '\nmask size is now ', nnzero+sum(uniquevox[inds]), '\nNumber of voxels added:', sum(uniquevox[inds]) )
+  imgs = imgs[,,,-inds]
+  subids = subids[-inds]
+  nnzero=nnzero+sum(uniquevox[inds])
+}
+nexcluded = nrow(dat) - length(subids)
+cat('\nExcluded', nexcluded, 'subjects.')
+dat = dat[ dat$sub_id %in% subids,]
+
+# now create the mask
+mask = readNifti(dat$files[1])
+imgs = simplify2array(readNifti(dat$files) )
+# mask actually still has pretty low coverage
+mask[,,] = 0
+mask[,,] = apply(imgs>0, 1:3, all)
+writeNifti(mask, maskfile)
+nvox = sum(mask)
+ulimit = quantile(apply(imgs, 4, function(x) x[mask!=0]), 0.9)
+rm(imgs)
+```
+
+```{r visualQA, eval=FALSE}
+# hardcoded at 90 percentile
+ulimit = 126.95
+niftis = readNifti(dat$files)
+#image(niftis[[5]], index=45, crop=FALSE)
+#image(niftis[[5]], index=45, crop=TRUE, title='test', fg='white', bg='black')
+par(mfrow=c(2,5), mar=c(0,0,2,0))
+invisible(lapply(1:length(niftis), function(ind) {image(niftis[[ind]], index=45, lo=FALSE, limits=c(0,ulimit)); mtext(dat$sub_id[ind], outer=FALSE)} ) )
+
+
+```
+
+
+### Whole-brain exploratory analysis
+
+The procedure described in [Preprocessed Autism Brain Imaging Data Exchange] was used to create the mask and `r nexcluded` subjects were excluded for low coverage, resulting in `r nrow(dat)` subjects in the data set and `r nvox` voxels in the mask.
+Several images in this dataset were removed due to strange orientation/coverage of the images.
+At this stage, non-image analysis tools can be used to explore the dataset and make sure there are no missing files or values.
+
+
+```{r ABIDEtable1}
+dat$sex = factor(dat$sex, levels=1:2, labels = c('Male', 'Female'))
+label(dat$sex) = "Sex"
+dat$dx_group = factor(toupper(dat$dx_group))
+dat$site_id = factor(dat$site_id)
+label(dat$age_at_scan) = "Age"
+label(dat$func_mean_fd) = "Mean displacement"
+label(dat$dx_group) = "Diagnosis"
+table1(~ sex + func_mean_fd + age_at_scan | dx_group, data=dat, caption = "ABIDE analysis summary table.")
+
+
+# remove the one person missing data
+dat = dat[!is.na(dat$func_mean_fd),]
+```
+
+Based on the table it looks like there is one participant in the ASD group who does is missing the motion variable. We will remove this participant prior to analysis. If we didn't remove them, `lmPBJ` would remove them before fitting the model and print a message.
+
+It's also helpful to do some whole-brain analyses to see what relationships between the different variables look like.
+Because the resting state ABIDE data can be affected by motion, we do some whole-brain analyses to select what motion related covariates to include in the analysis. We plot the mean `r derivative` for each subject versus covariates including, age, sex, site and other quality control covariates (Figure \@ref(fig:ABIDEwholebrain)).
+After fitting a model with all variables, added variable plots show the effect of each variable on whole-brain data controlling for all other variables in the model (Figure \@ref(fig:ABIDEavplot)).
+Based on the added variable plots, we include demographic and behavioral covariates as well as mean frame displacement (`func_mean_fd`), foreground to background energy ratio (`func_fber`), and the mean number of outliers in each rs-fMRI volume (`func_outlier`).
+
+```{r ABIDEwholebrain, fig.height=10, fig.cap="Marginal plots for mean of the outcome image and each variable considered for the image level model.", message=FALSE}
+# average all imaging data in the mask
+dat$meanY = sapply(readNifti(dat$files), function(img){ mean(img[mask==1 & img>0])} )
+
+# plot mean imaging data as a function of outcome
+potentialVars = c('sex', 'age_at_scan', 'dx_group', 'site_id',  'func_mean_fd', 'func_fber', 'func_efc', 'func_dvars', 'func_mean_fd', 'func_gsr', 'func_outlier', 'func_perc_fd')
+# plot grid
+par(mfrow=c(4,3), mar=c(3,3,0,0), fg='black', bg='white', mgp=c(1.8,.7,0))
+invisible(sapply(potentialVars, function(var){plot(dat[,var], dat$meanY, ylab=derivative, xlab=var, bty='l')}))
+model = lm(as.formula(paste('meanY ~', paste(potentialVars, collapse='+'))), data=dat)
+```
+
+```{r ABIDEavplot, fig.height=10, fig.cap="Added variable plots for demographic, behavioral and imaging covariates that show the relationship between each variable and the outcome (`meanY`) cintrolling for the other variables in the model.", message=FALSE}
+library(car) # for avPlots
+par(mar=c(3,3,0,0))
+avPlots(model, terms=~.-site_id, main=paste('Whole brain', derivative), layout=c(4,3), ask=FALSE, mgp=c(1.8, 0.7, 0)) 
+```
+
+
+### Voxel-wise analysis with `lmPBJ`
+
+The following code sets up variables we will use to analyze the data. We assume that the mean value of fALFF for people in the population is a linear function of sex, diagnostic group, site where the data were collected, and the motion covariates.
+We will compare this to a model that does not include diagnosis and another model that does not include age, so that we are testing for the effect of diagnosis and age separately at each location in the fALFF image.
+In addition, we will include weights for each participant that are proportional to the inverse of the the person's mean frame displacement during the scan with the logic being that participants that move more will have noisier data [@vandekar_robust_2019].
+These weights correspond to a working variance structure, i.e. they are an estimate of how we think the variance of the imaging data differs across study participants.
+If we use robust standard error estimates, then the weights do not have to be correctly specified as the inverse of the variance for each participant; more details are given below and in [PBJ analysis methods].
+
+The mask file that was created above will be used to specify where in the image the analysis should be performed. The output file indicates where to save the output of `pbjInference` later in the analysis, and `ncores` controls how many cores will be used to perform the analysis.
+Finally, we include two example vectors of cluster forming thresholds that will be used for inference later.
+
+```{r ABIDEvariables}
+# need age_at_scan in both models for testing nonlinear functions
+form = paste0(" ~ sex + age_at_scan + func_mean_fd + func_fber + func_outlier + dx_group + site_id" )
+formred = paste0(" ~ sex + age_at_scan + func_mean_fd + func_fber + func_outlier + site_id")
+formredAge = paste0(" ~ sex + dx_group + func_mean_fd + func_fber + func_outlier + site_id")
+#  weights for each subject. Can be a character vector
+weights = "func_mean_fd"
+mask = maskfile
+output = paste0(tempfile(), '.rdata')
+ncores = 24
+```
+
+
+The following line fits the model and estimates the coefficient and test statistic for the diagnosis variable. By default, `lmPBJ` uses robust standard errors, which provide consistent standard error and RESI estimates, even if the weights, covariance structure, and mean model are not correctly specified. This means that the results are not sensitive to differences in variance structure related to diagnosis, motion, or site.
+This option can be changed by setting the `robust` argument to `FALSE`.
+The `transform` argument defaults to `t`; this means the test statistics are assumed to be approximately T-distributed at each voxel, and it converts to chi-squared statistics by converting them to $Z$ statistics and squaring them.
+The template file is not required, but makes visualization easier down-the-road.
+
+We can perform a similar analysis of age, using the same full model as input, but using the reduced formula with age removed.
+
+```{r ABIDElmPBJ}
+# DX analysis
+abideDX = lmPBJ(dat$files, form=form, formred=formred, mask=mask, data=dat, Winv=dat[,weights], template = templatefile)
+abideDX
+
+# Age analysis
+abideAge = lmPBJ(dat$files, form=form, formred=formredAge, mask=mask, data=dat, Winv=dat[,weights], template = templatefile)
+```
+Printing the fitted `statMap` object at the terminal gives information about how the model was fit and the output values.
+We can visualize the results using a lightbox view with the `image` function, which calls the `image.statMap` method for objects of class `statMap` (Figure \@ref(fig:abideDXlightbox)).
+The argument `cft_p=0.05` indicates to show only regions with an uncorrected $p$-value less than $0.05$.
+
+```{r abideDXlightbox, fig.cap=c("Diagnostic differences in fALFF controlling for sex, age, motion, and site. Colors are signed -log10(p) values showing uncorrected $p \\le 0.05$."), fig.width=10}
+image(abideDX, cft_p=0.05, crop=TRUE)
+```
+
+If the parameter tested is 1-dimensional (such as a T-test), the results are shown by default as signed $-log_{10}(p)$. The results show clusters in posterior cingulate and parietal lobes that are positively associated with ASD diagnosis, as well as small clusters at the midline that are possibly due to motion artifact. The second call to image passes additional named arguments to the `image.niftiImage` function to more easily visualize the results (Figure \@ref(fig:abideDXsag)).
+
+
+```{r abideDXsag, fig.cap="Diagnostic differences in fALFF controlling for sex, age, motion, and site. Colors are signed -log10(p) values showing uncorrected $p \\le 0.05$. for slices `z=28:36`", out.width='70%'}
+image(abideDX, cft_p=0.05, plane='coronal',  index=seq(28, length.out=8), nrow=2, crop=FALSE)
+```
+
+We can also visualize the same result on the effect size scale using the same function with the `cft_s=0.1` argument, which highlights regions where the effect size, $S$, is larger than $0.1$ (a small effect size; Figure \@ref(fig:abideDXlightboxS); see Section REF).
+
+```{r abideDXlightboxS, out.width='70%', fig.cap="Diagnostic differences in fALFF controlling for sex, age, motion, and site. Colors are signed RESI values showing uncorrected $S \\ge 0.1$. for slices `z=28:36`."}
+image(abideDX, cft_s=0.1, plane='sagittal',  index=seq(28, length.out=8), nrow=2)
+```
+
+
+The age analysis highlights regions of the brain in prefrontal cortex where there are differences associated with age, with estimated effect sizes larger than $S=0.1$ and $S=0.15$ (Figures \@ref(fig:ABIDElmPBJage) and \@ref(fig:ABIDElmPBJageSag)).
+Blue is negative and highlights regions where the reduction in fALFF has an effect size larger than $S=0.1$.
+
+```{r ABIDElmPBJage, fig.cap=c("Age-related differences in fALFF controlling for sex, diagnosis, motion, and site. Colors are signed RESI values showing uncorrected $S\\ge 0.1$. for slices `z=20:49`.")}
+  image(abideAge, cft_s = 0.1, index=20:49)
+```
+```{r ABIDElmPBJageSag, fig.cap=c("Age-related differences in fALFF controlling for sex, diagnosis, motion, and site. Colors are signed RESI values showing uncorrected $S \\ge 0.1$. for slices `x=14:49`.")}
+  image(abideAge, cft_s = 0.15, index=14:49, plane='sagittal')
+```
+
+### Topological inference (Maxima, CEI, CMI)
+
+Here, we will perform inference on local maxima, cluster extent inference (CEI), and cluster mass inference (CMI) on the statistical images for the diagnosis and age effects.
+These forms of statistical inference take a cluster forming threshold (CFT) as input and compute the probability that a cluster of the given size (or mass) would appear if there is no association
+Cluster size is the number of voxels in a given spatially contiguous cluster above the CFT and cluster mass is the sum of the statistical values in the spatially contiguous above the CFT.
+Inference procedures are run in the `pbj` package using the `pbjInference` command.
+This function runs the inference in the foreground or background, serially or in parallel, and returns an `statMap` object that is the original `statMap` object, with the a `pbj` object added as a new element of the list.
+
+The following command runs CEI and CMI on the diagnosis statistical image in the background in parallel using `r ncores`.
+The `pbjInference` takes the `statMap` object from `lmPBJ` as input.
+It automatically runs in the background if the user passes an `.rdata` or `.rds` file.
+The `if` statement checks if the file exists to avoid running it twice.
+The `mc.cores` argument specifies how many cores to run in parallel.
+As described in \@ref{#pbjInference}, the `statistic` argument is the most important and determines what type of inference to run on the images.
+The default is `statistic=mmeStat`, which can be used for inference of local maxima and clusters.
+`pbjInference` takes named arguments that getp passed to the `statistic` function. In this case `CEI=TRUE, CMI=TRUE, maxima=TRUE` instruct `pbjInference` to run all types of inference procedures on the diagnosis image.
+Other arguments can be found by typing `?mmeStat` at the command line.
+Finally, the `cft_s=0.1` argument specifies that we are targeting inference on clusters where the effect size is larger that $S=0.1$, which corresponds to a Cohen's $d=0.2$ [@vandekar_robust_2020].
+
+```{r ABIDEpbjInference, eval=TRUE}
+rdatafile = file.path(datadir, 'abide/results/abideDX.rdata')
+# make sure the directory exists
+dir.create(dirname(rdatafile), showWarnings = FALSE)
+if(!exists(rdatafile)){
+  progr = pbjInference(abideDX, rdata_rds = rdatafile, mc.cores=ncores, CEI=TRUE, CMI=TRUE, maxima=TRUE, cft_s=0.1)
+}
+```
+
+The code below runs the same inference procedure to investigate the age effect using two effect size thresholds to target effect sizes larger than $S=0.1$ and $S=0.15$.
+These thresholds should be determined in advance.
+See [Selecting effect size CFTs].
+
+In addition we change is the output filename and the input `statMap` object to `abideAge`.
+
+```{r ABIDEpbjInferenceAge, eval=TRUE}
+rdatafile = file.path(datadir, 'abide/results/abideAge.rdata')
+if(!exists(rdatafile)){
+  progr = pbjInference(abideAge, rdata_rds = rdatafile, mc.cores=ncores, CEI=TRUE, CMI=TRUE, maxima=TRUE, cft_s=c(0.1, 0.15) )
+}
+```
+
+### Interpreting and visualizing `pbjInference` results
+
+
+#### Tabulating inference results
+
+After fitting the model we can use the `table.statMap` function to visualize the results using a cluster or maxima summary table.
+The cluster summary table gives the cluster index, which is based on the physical coordinate of the cluster in the image, the cluster or maxima statistical value, the voxel coordinates of the centroid, the unadjusted $p$-value, FWER adjusted $p$-value, and the effect size (RESI; Tables \@ref(fig:abideDXcei), \@ref(fig:abideDXcmi), and \@ref(fig:abideDXmaxima)).
+For the maxima table, only the global maxima is computed in each bootstrap by default due to the computational demand of computing local maxima, so only the FWER adjusted results are available (Table \@ref(fig:abideDXmaxima)).
+Details on the estimation and interpretation of the $p$-values are given in [Statistical Inference].
+The table results are visualized using the `reactable` package, but can easily be exported to `.csv` files for journal formatting.
+
+In this case, because ABIDE has a large sample size of `r nrow(dat)`, the cluster-based inference $p$-values are small even for relatively small cluster sizes (Table \@ref(fig:abideDXcei)) because an effect size of $S=0.15$ corresponds to a small cluster forming threshold on the $p$-value scale.
+
+
+
+
+```{r ABIDEdxResults}
+rdatafile = file.path(datadir, 'abide/results/abideDX.rdata')
+if(file.exists(rdatafile)){
+  # loading the rdata file loads "statMap" and "computeTime" objects
+  load(rdatafile)
+  abideDX = statMap
+  ctDX = computeTime[3]
+  rm(statMap)
+  
+  # create the tables for each inference type
+  CEItab = table.statMap(abideDX, cft_s=0.1)
+  CMItab = table.statMap(abideDX, method='CMI', cft_s=0.1)
+  maximaTab = table.statMap(abideDX, method='maxima')
+  #plot(seq(0, 35, length.out=1000), abideDX$pbj$fwerCDF$maxima(seq(0, 35, length.out=1000)), type='l')
+}
+```
+
+```{r abideDXcei, fig.cap="CEI inference results for the test of the effect of diagnosis on fALFF in the ABIDE data."}
+  library(reactable)
+  reactable(CEItab, columns = list(
+    "Centroid (vox)"=colDef(align = 'right'),
+    "Unadjusted p-value"=colDef(format = colFormat(digits=3)),
+    "FWER p-value"=colDef(format = colFormat(digits=3)),
+    "Max RESI"=colDef(format = colFormat(digits=3))
+                                ))
+```
+
+```{r abideDXcmi, fig.cap="CMI inference results for the test of the effect of diagnosis on fALFF in the ABIDE data."}
+  reactable(CMItab, columns = list(
+    "Centroid (vox)"=colDef(align = 'right'),
+    "Unadjusted p-value"=colDef(format = colFormat(digits=3)),
+    "FWER p-value"=colDef(format = colFormat(digits=3)),
+    "Max RESI"=colDef(format = colFormat(digits=3))
+                                ))
+```
+
+```{r abideDXmaxima, fig.cap="Inference results for local maxima for the test of the effect of diagnosis on fALFF in the ABIDE data."}
+  reactable(maximaTab, columns = list(
+    "Coord (vox)"=colDef(align = 'right'),
+    "Chi-square"=colDef(format=colFormat(digits=2) ),
+    "FWER p-value"=colDef(format = colFormat(digits=3)),
+    "Max RESI"=colDef(format = colFormat(digits=3))
+                                ))
+```
+
+
+
+The same summary tables for age are given below and demonstrate the use of other cluster forming thresholds (RESI; Tables \@ref(fig:abideAgecei), \@ref(fig:abideAgecmi), and \@ref(fig:abideAgemaxima)).
+
+
+```{r ABIDEageResults}
+rdatafile = file.path(datadir, 'abide/results/abideAge.rdata')
+if(file.exists(rdatafile)){
+  # loading the rdata file loads "statMap" and "computeTime" objects
+  load(rdatafile)
+  abideAge = statMap
+  ctAge = computeTime[3]
+  rm(statMap)
+  
+  # create the tables for each inference type
+  CEItab = table.statMap(abideAge, cft_s=0.1)
+  CEItab15 = table.statMap(abideAge, cft_s=0.15)
+  CMItab = table.statMap(abideAge, method='CMI', cft_s=0.15)
+  maximaTab = table.statMap(abideAge, method='maxima')
+}
+```
+
+```{r abideAgecei, fig.cap="CEI inference results for the test of the effect of age on fALFF in the ABIDE data."}
+  reactable(CEItab, columns = list(
+    "Centroid (vox)"=colDef(align = 'right'),
+    "Unadjusted p-value"=colDef(format = colFormat(digits=3)),
+    "FWER p-value"=colDef(format = colFormat(digits=3)),
+    "Max RESI"=colDef(format = colFormat(digits=3))
+                                ))
+```
+
+```{r abideAgecmi, fig.cap="CMI inference results for the test of the effect of age on fALFF in the ABIDE data."}
+  reactable(CMItab, columns = list(
+    "Cluster Mass"=colDef(format = colFormat(digits=0)),
+    "Centroid (vox)"=colDef(align = 'right'),
+    "Unadjusted p-value"=colDef(format = colFormat(digits=3)),
+    "FWER p-value"=colDef(format = colFormat(digits=3)),
+    "Max RESI"=colDef(format = colFormat(digits=3))
+                                ))
+```
+
+```{r abideAgemaxima, fig.cap="Inference results for local maxima for the test of the effect of age on fALFF in the ABIDE data."}
+  reactable(maximaTab, columns = list(
+    "Coord (vox)"=colDef(align = 'right'),
+    "Chi-square"=colDef(format=colFormat(digits=2) ),
+    "FWER p-value"=colDef(format = colFormat(digits=3)),
+    "Max RESI"=colDef(format = colFormat(digits=3))
+                                ))
+```
+
+
+
+#### Visualizing results
+
+The `image` function has a special behavior for `statMap` objects that have had `pbjInference` run and include a `pbj` object.
+There are numerous options for quickly visualizing the results within `R`.
+Running the image command on the `statMap` object that has a `pbj` object automatically visualizes all clusters in the image (Figure \@ref(fig:abideDXpbjVisAll)).
+By default the `image` function draws in the axial plane using the CEI results.
+The image function defaults to showing the plane at the centroid of the selected cluster and prints the cluster ID number on the center of the cluster.
+The slices are ordered by the rows of Table \@ref(fig:abideDXcei).
+
+```{r abideDXpbjVisAll, fig.cap="Visualization of `pbjInference` results."}
+image(abideDX, cft_s=0.1, plane='axial')
+# od = tempdir()
+# files = write.statMap(abideDX, outdir=od)
+# papaya(c(templatefile, files$`CMI 1`))
+```
+
+We can see in the first two rows of Table \@ref(fig:abideDXcei), that there are two clusters with relatively small FWER adjusted $p$-values.
+We can visualize these using the image function and setting $\alpha=0.06$ to capture the first two rows (Figure \@ref(fig:abideDXpbjVis)).
+
+```{r abideDXpbjVis, fig.cap="Visualization of clusters with FWER adjusted \\$p<0.06\\$"}
+image(abideDX, cft_s=0.1, alpha=0.06)
+# od = tempdir()
+# files = write.statMap(abideDX, outdir=od)
+# papaya(c(templatefile, files$`CMI 1`))
+```
+
+We can also visualize the first four largest clusters by specifying the ROI index from Table \@ref(fig:abideDXcei) (Figure \@ref(fig:abideDXpbjVisROIs)).
+Here, we change the plane and suppress the cluster number overlay.
+
+```{r abideDXpbjVisROIs, fig.cap}
+image(abideDX, cft_s=0.1, roi=c(2,7,16,1), plane='coronal', clusterID=FALSE)
+# od = tempdir()
+# files = write.statMap(abideDX, outdir=od)
+# papaya(c(templatefile, files$`CMI 1`))
+```
+
+#### Plotting results
+
+
+```{r, abideDXplot}
+library(ggplot2)
+layout(matrix(1:2, nrow=1))
+abideDXem = plotData.statMap(abideDX, emForm = ~ dx_group)
+plot(abideDXem$emmeans[[1]], horizontal=FALSE, ylab='Diagnosis' ) +
+  ggtitle(paste('ROI', names(abideDXem$emmeans)[[1]]))
+# + geom_jitter(data=abideDXem$data, aes(x = roi2, y=ifelse(dx_group=='ASD', 1, 2)), size=0.5, width=0.1)
+plot(as.factor(abideDXem$data$dx_group), abideDXem$data$roi2, xlab='Diagnosis', ylab='fALFF')
+```
+
+```{r, }
+ageRange = range(abideAge$data$age_at_scan)
+abideAgeEM = plotData.statMap(abideAge, method='CEI', cft_s=0.15, emForm = ~ age_at_scan, at=list(age_at_scan = seq(ageRange[1], ageRange[2], length.out=100)) )
+
+# create the plot of ROI10 using base R
+plot(abideAgeEM$data$age_at_scan, abideAgeEM$data$roi10, xlab='Age', ylab='fALFF', pch=20, main='Age effect in Cluster 10')
+plotDF = as.data.frame(abideAgeEM$emmeans[[1]])
+polygon(c(plotDF[,'age_at_scan'], rev( plotDF[,'age_at_scan'])), c(plotDF[,'lower.CL'], rev(plotDF[,'upper.CL'])), border=NA, col='gray')
+lines(plotDF[,'age_at_scan'], plotDF[,'emmean'])
+```
+
+
+#### Exporting results
+
+The output can be written using the `write.statMap` function, which writes the statistical image (as $-\log_{10}(p)$, the RESI $S$, or the Chi-squared statistical values), the 4D coefficient image, the model information stored in a `sqrtSigma` object, and then all of the inference results returned by `pbjInference`. `write.statMap` returns a list of file paths for all the objects written.
+The results are then easily visualized in another software package, if preferred by the user.
+
+```{r ABIDEexport}
+statmapFolder = tempfile() # generate a random file folder name
+dir.create(statmapFolder) # create the directory
+files = write.statMap(abideAge, outdir=statmapFolder) # write the statistical image
+```
+
+
+#### Interative visualization
+
+The Papaya widget in [Neuroconductor](www.neuroconductor.org) allows us to embed the papaya image viewer in an html document for interactive visualization.
+The papaya image viewer takes a vector of image paths as input for the background and overlay images.
+Here, we use the output from `write.statMap` to visualize the results on the signed $-\log_{10}(p)$ scale.
+
+```{r papayaABIDE}
+library(papayaWidget)
+papaya(c(templatefile, files$stat )) # view the statistical image
+```
+
+
+## Pain meta-analysis
+
+
+The `pain21` R package is a dataset of coefficient and variance maps from 21 pain studies obtained from the "21 Pain Studies" Neurovault repository [maumet_sharing_2016].
+For this analyses, we will perform a meta-analysis to estimate regions that are activated above a given effect size threshold.
+Often, public data sets only include standardized statistical maps; this makes meta-analysis using conventional methods (e.g. mixed effects models) difficult or impossible because the study level variances aren’t known. However, the sPBJ procedure is still valid in large samples because it uses robust standard errors, so any weights can be used and the standard errors are still consistent, as long there is an adequate number of studies used in the analysis. The best weight vector for the model is one that is a good estimate of the variance for the statistical map for that study, we do that below. However, we can also see how inference changes if we don’t have the variance images, but assume instead that the variance of the estimate from each study is proportional to the sample size.
+
+```{r}
+library(pain21)
+pain = pain21()
+pain$mask
+```
+
+The `pain21` function from the `pain21` package creates a data frame with file paths for the imaging data that we need to perform the analysis. The following images are required to perform the analysis:
+
+* The mask image is a binary image indicating which voxels should be included in the analysis.
+* The character vector of images is the contrast image from each study included in the meta-analysis.
+* The character vector of varimages contains the voxel level estimates of variance from each study.
+
+The template is the MNI 152 template and is not necessary to compute the statistical map or perform SEI, but it is handy to include here for visualization in later steps.
+The code below loads the data and shows the names of the images.
+
+```{r}
+library(pain21)
+pain = pain21()
+basename(pain$mask)
+basename(pain$template)
+head(basename(pain$data$images))
+head(basename(pain$data$varimages))
+```
+
+Below, we compute the mean variance of the coefficient image for each study and use the inverse variance as a weights in the meta-analysis model.
+This assumes that the variance of the coefficient image estimator at each voxel is proportional to the inverse of the mean of the variance.
+While this assumption is likely incorrect, it might be a good working model. Using the `robust=TRUE` option ensures that the standard error estimators for the meta-analysis model are consistent, despite this potentially incorrect assumption.
+If the weights are a good working model, it will improve efficiency (i.e. reduce the variance of the coefficient, effect size, and standard error estimators) relative to using an unweighted model.
+
+The square root of the variance of the coefficient estimate is mathematically linearly related to the square root of the sample size (Figure \@ref(fig:painMetaAnalysis)). This may vary across samples due to sampling variability, or differences in the efficiency of the design of the study.
+In the absence of having the inverse variance image, we could use inverse sample sizes as weights for the meta-analysis.
+
+The last few lines use `lmPBJ` to fit a series of different meta-analysis models.
+The first estimates the mean activation of the brain across similarly conducted pain studies.
+By default, the model is fit with the `robust=TRUE` option, which means that the consistent standard error estimator are used for the coefficient.
+The full model is an intercept only model (estimating the mean activation across studies) and compares this to a null model with no mean. This tests whether the activation at a given location is different than zero.
+
+The `painSPM` `lmPBJ` call compares the estimates across the SPM and FSL software versions to contrast differences in the pain activation maps between software versions.
+
+The `painN` call tests the association of sample size (`n`) with the estimated brain response for each study. This test is to probe publication bias; if there is publication bias, we might expect smaller studies to report larger effect sizes on average because larger effect size estimates are required to obtain small p-values in smaller samples.
+
+```{r painMetaAnalysis, fig.width=3, fig.height=3, out.width='40%', fig.cap="Relationship between mean of the square root of the average of the variance image and the sample size across the 21 pain studies."}
+library(pbj)
+outdir = dirname(tempdir())
+
+
+library(RNifti) # NIfTI IO
+# read in variance images and compute whole brain average variance to use as weights
+varimages = readNifti(pain$data$varimages)
+pain$data$Winv = sapply(1:length(varimages), function(ind){ 
+  mean(varimages[[ind]][varimages[[ind]]!=0])
+})
+images = readNifti(pain$data$images)
+pain$data$mean = sapply(1:length(images), function(ind){ 
+  mean(images[[ind]][images[[ind]]!=0])
+})
+
+plot(sqrt(pain$data$n), sqrt(pain$data$Winv), xlab='Sample size', ylab='Inverse variance', main = 'Variance-sample size', bty='l')
+abline(lm(sqrt(Winv) ~ sqrt(n), data=pain$data))
+# plot(pain$data$spm, pain$data$Winv)
+# plot(pain$data$spm, pain$data$mean)
+
+# fit an intercept only model and test the intercept
+painPBJ <- lmPBJ(pain$data$images, form = ~1, formred = NULL, pain$mask,
+                 data = pain$data, Winv = pain$data$Winv, template = pain$template)
+
+# fit a model comparing results between software version
+painSPM <- lmPBJ(pain$data$images, form = ~1 + spm, formred = ~ 1, pain$mask,
+                 data = pain$data, Winv = pain$data$Winv, template = pain$template)
+
+# fit a model for the association between sample size and effect size
+painN <- lmPBJ(pain$data$images, form = ~1 + spm + n, formred = ~ 1  + spm, pain$mask,
+                 data = pain$data, Winv = pain$data$Winv, template = pain$template)
+```
+
+
+### Pain-related activation
+
+Thresholding the intercept only model using a large meta-analysis effect size threshold of $S>0.5$ shows regions of the brain that are activated (red) and deactivated during the pain versus control condition (Figure \@ref(fig:painIntercept)).
+For contrast, we show the same results thresholding the image using a $p$-value $p<0.001$.
+
+```{r painIntercept, fig.cap='Effect size (top) and p-value (bottom) thresholding of the one-sample meta-analytic test of pain activation.'}
+image(painPBJ, cft_s=0.5)
+image(painPBJ, cft_p=0.001)
+```
+
+We use cluster mass inference and local maxima to compute FWER adjusted $p$-values and target regions where there is a large effect size ($S>0.5$).
+The results consist of one large cluster with a small FWER and numerous smaller cluster masses that have large FWER $p$-values (Table \@ref(fig:painMassTab)).
+
+```{r, painMassTab, fig.cap="Cluster mass results for the one-sample test of the meta-analysis of pain."}
+library(reactable)
+rdsFile = file.path(outdir, 'painResults/invVarWeights_test.rds')
+if(!file.exists(rdsFile)){
+  progr = pbjInference(painPBJ, CEI=FALSE, CMI=TRUE, maxima=TRUE, cft_s=0.5, rdata_rds = rdsFile)
+}
+if(file.exists(rdsFile)){
+  painPBJ = readRDS(rdsFile)
+  massTab = table.statMap(painPBJ, method='CMI')
+  reactable(massTab, columns = list(
+    "Centroid (vox)"=colDef(align = 'right'),
+    "Cluster Mass"=colDef(format=colFormat(digits=2) ),
+    "Unadjusted p-value"=colDef(format = colFormat(digits=3)),
+    "FWER p-value"=colDef(format = colFormat(digits=3)),
+    "Max RESI"=colDef(format = colFormat(digits=3))
+                                ))
+}
+```
+
+
+Because the data consiste of one large cluster, reporting local maxima maybe more helpful to identify important regions where pain activity is found across the datasets (Table \@ref(fig:painIntMax)).
+Only the first local maxima is significant by the conventional arbitrary threshold of $p<0.05$, but we can look at the first 4 rows to see which regions are near the top.
+
+
+```{r painIntMax}
+if(file.exists(rdsFile)){
+  maxTab = table.statMap(painPBJ, method='maxima')
+  reactable(maxTab, columns = list(
+    "Coord (vox)"=colDef(align = 'right'),
+    "Chi-square"=colDef(format=colFormat(digits=2) ),
+    "FWER p-value"=colDef(format = colFormat(digits=3)),
+    "Max RESI"=colDef(format = colFormat(digits=3))
+                                ))
+}
+```
+
+
+```{r painIntVis}
+image(painPBJ, method='maxima', alpha = 0.06)
+
+```
+
+
+### Software related differences in pain meta-analysis
+
+The `painSPM` model tests the effect of software (SPM > FSL). We threshold at a medium effect size $S=0.25$ and a $p$-value threshold $p<0.001$ for visualization (Figure \@ref(fig:painSPM)).
+We chose a smaller effect size threshold because, ideally, we would want/expect effect sizes to software differences to be quite small. As we can see from the visualization, it looks like the software differences with greater than medium effect sizes are actually pretty widespread (Figure \@ref(fig:painSPM)).
+The red regions show where the results of the SPM studies are larger than the studies fit using FSL, blue shows where they are smaller.
+
+We can visualize the emmeans for the results, to see the estimates and directionality for local maxima as well as is done for the first region, which has the largest effect size \@ref(fig:painSPM)).
+The `emmeans` plot is based on the defaults from that package and may not be ideal for all purposes (I prefer a different aesthetic).
+The `pdSPM` object that is created by this command has other useful information for interpreting the results and creating plots, such as the imaging data for each subject averaged in each region, estimates, confidence intervals, and hypothesis tests.
+
+```{r painSPM}
+image(painSPM, cft_s=0.25)
+image(painSPM, cft_p=0.001)
+pdSPM = plotData.statMap(painSPM, emForm = ~ spm, method = 'maxima')
+plot(pdSPM$emmeans[[1]])
+maximaTab = table.statMap(painSPM, method = 'maxima')
+```
+We can create a summary table for the local maxima prior to running `pbjInference`, but no adjusted $p$-values are returned, because the resampling procedure must be run to compute these $p$-values.
+
+```{r painSPMmaxima, fig.cap="Inference results for local maxima for the test of the effect of software on the estimated pain activation maps."}
+  reactable(maximaTab, columns = list(
+    "Coord (vox)"=colDef(align = 'right'),
+    "Chi-square"=colDef(format=colFormat(digits=2) ),
+    "Max RESI"=colDef(format = colFormat(digits=3))
+                                ))
+```
+
+```{r}
+rdsFile = file.path(outdir, 'painResults/invVarWeights_SPMtest.rds')
+if(!file.exists(rdsFile)){
+  dir.create(dirname(rdsFile), showWarnings = FALSE)
+  progr = pbjInference(painSPM, CEI=FALSE, CMI=TRUE, maxima=TRUE, cft_s=0.25, rdata_rds = rdsFile)
+}
+```
+
+
+
+
+
+
+## NKI-RS analysis
+
+In this tutorial, we use the `pbj` package to model sex differences age-related changes in gray matter in the cross-sectional Nathan Kline Institute Rockland Sample (NKI-RS). The dataset includes 683 participants ages 6-85.
+The outcome images are voxel-based morphometry (VBM).
+The intensity of each voxel is a point-wise estimate of gray matter volume [ashburner_computational_2009].
+
+
+
+### Loading data and basic image processing
+
+The data file can be loaded into `R` from a `.csv` file.
+```{r data file}
+# sets path for data file
+dbdatafile = '/media/disk2/pbj/data/rockland/demographic/RocklandBehavioral.csv'
+# load in data file
+nki = read.csv(dbdatafile, stringsAsFactors = TRUE)
+```
+
+
+We do some minor data curation by subsetting the dataset to subjects who have data on the server (data that did not pass quality assurance was not installed at this location) and listing the first Nifti image file for each subject.
+We add two other columns to the dataset for creating downsampled images (from 1mm to 2mm isotropic resolution) and creating 8mm FWHM Gaussian smoothed images. Lastly, we add columns for age and sex from the variables included in the NKI-RS.
+```{r checkDirectories, echo=FALSE}
+dbimagedir = '/media/disk2/pbj/data/rockland/neuroimaging'
+nki$dir = file.path(dbimagedir, nki$AnonymizedID, nki$IDandSession)
+#nki$dir[which(!file.exists(nki$dir))]
+nki = nki[ file.exists(nki$dir), ]
+# some subjects have two image folders, this just grabs the first one.
+nki$files = file.path(sapply(nki$dir, function(dir) list.files(dir, pattern='*', full.names=TRUE)[1]), 'GRAY_MNORM/mwp1t1.nii.gz')
+nki$files2mm = gsub('.nii.gz', '_2mm.nii.gz', nki$files)
+nki$files2mmsm8 = gsub('.nii.gz', '_sm8.nii.gz', nki$files2mm)
+
+nki$age = nki$CalculatedAge
+nki$sex = nki$WhatIsYourSex
+# subset the data to relevant variables
+nki = nki[,c('AnonymizedID', 'IDandSession', 'files', 'files2mm', 'files2mmsm8', 'age', 'sex')]
+```
+
+
+The commented code shows how the mask file was made, as the intersection of all voxels that are above zero in all of the participants' images.
+
+
+
+```{r, fig.cap="Lightbox view of the template image. This is the default display for niftiImage objects."}
+maskfile = "/media/disk2/pbj/data/rockland/neuroimaging/overlap_mask_2mm.nii.gz"
+templatefile = '/usr/local/fsl/data/standard/MNI152_T1_2mm_brain.nii.gz'
+# reads in image and creates lightbox view.
+image(readNifti(templatefile))
+library(papayaWidget)
+
+## CREATE MASK
+# if(!file.exists(maskfile)){
+#   imgs = readNifti(nki$files)
+#   mask = imgs[[1]]
+#   mask[,,] = 0
+#   imgs = apply(simplify2array(imgs), 1:3, function(v) sum(v>0))
+#   mask[sum(imgs)==nrow(nki)] = 1
+#   writeNifti(mask, file=maskfile)
+# }
+```
+
+
+
+
+
+
+PUT THIS SOMEWHERE ELSE BELOW.
+```{r dataSetup, eval=TRUE}
+# location to save results
+pbjdatafile = '/media/disk2/pbj/pbj_ftest/nkirs_bootstrap_results.rdata'
+permdatafile = '/media/disk2/pbj/pbj_ftest/nkirs_permutation_results.rdata'
+```
+
+
+The input VBM data are at 1mm isotropic resolution and unsmoothed.
+The code below downsamples the images to 2mm isotropic resolution and applies smoothing at 8mm FWHM. It first checks whether the downsampled, smoothed output files exist; if not, it downsamples and applies smoothing using functions from the `fslr` package.
+The second to last line creates an interactive viewer embedded into this html document using `papayaWidget` to visualize the effect of the smoothing in the first participant.
+
+```{r, imageSmoothing, eval=FALSE}
+if(!all(file.exists(nki$files2mmsm8))){
+  ## CREATE DOWNSAMPLED DATA
+  invisible(mcmapply(flirt, infile=nki$files, outfile=nki$files2mm, opts = '-applyxfm', MoreArgs=list(reffile=templatefile, retimg=FALSE), mc.cores = ncores ))
+  ## SMOOTH DOWNSAMPLED DATA
+  # convert FWHM to sigma
+  sigma = 8/2.355
+  invisible(mcmapply(susan, file=nki$files2mm, outfile=nki$files2mmsm4, MoreArgs=list(sigma=sigma, dimg='3', n_usans='0'), mc.cores=ncores)) 
+  # sigma = 8: using 8mm smoothing
+}
+
+# view files
+# set downsampled smoothed files as the main file
+papaya(c(templatefile, nki$files2mm[1], nki$files2mmsm8[1]))
+```
+
+
+### Model specification
+
+In order to study sex differences in the mean adult life-span curve of gray matter volume we fit the model
+\[
+Y_i(v)  = \alpha_0(v) +  \alpha_1(v)\text{sex}_i + f_1(\text{age}_i, v) + \text{sex}_i \times f_2(\text{age}_i, v) + E_i(v),
+\]
+where $Y_i(v)$ denotes the VBM image for participant $i$ and voxel location $v$.
+$\text{sex}_i$ is an indicator variable that is equal to 1 if participant $i$ is a male.
+We fit $f_1$ and $f_2$ with natural cubic splines on 4 degrees of freedom.
+The unknown parameters $\alpha_0(v)$, $\alpha_1(v)$, $f_1$, and $f_2$ quantify the association between each variable and the VBM image at location $v$.
+
+To study sex differences in the life-span curve, we test the nonlinear age by sex interaction which corresponds to parameters that control the shape of the function $f_2$.
+The null hypothesis is that $f_2(\text{age}_i) = 0$ for all values of $\text{age}_i$ and all voxel locations $v$, versus the alternative hypothesis that this is not true,
+\begin{align*}
+H_0: & f_2(\text{age}, v) = 0 \\
+H_1: & f_2(\text{age}, v) \ne 0.
+\end{align*}
+Because $f_2$, is modeled with 4 degrees of freedom the test for $H_0$ is an F-test at each voxel location, $v$, on 4 degrees of freedom.
+
+This model specification is used to test the nonlinear age by sex interaction.
+The null hypothesis at each location is that males and females follow the same developmental trajectory.
+The third line subsets the data to rows that have no missing variables (complete case analysis).
+
+```{r, model}
+
+nki$files = nki$files2mmsm8
+# Testing the interaction between nonlinear age x sex
+lmfull =  ~ ns(age, df=4) * sex
+lmred = ~ sex + ns(age, df = 4)
+nki = nki[apply(!is.na(nki[,all.vars(as.formula(lmfull))]), 1, all), ]
+
+# add a demographic summary table using tangram
+table1( ~ age | sex, data=nki)
+```
+
+
+To test the parameters corresponding to the $f_2$, we use a robust test statistic.
+The model is fit using the `lmPBJ` function and computes the coefficients, the robust test statistic, and objects required to perform inference in the next step.
+
+
+```{r robustStat, message=FALSE, cache=FALSE}
+# lmPBJ -- fits the model and computes the statistical image for the covariate of interest
+## using robust test statistics (`robust = TRUE`)
+robustStatMap <- lmPBJ(nki$files, form=lmfull, formred=lmred, mask=maskfile, template = templatefile, data=nki, robust = TRUE, HC3 = TRUE, transform = 't')
+```
+
+The result from this command is an object of class `statMap` that contains the following objects:
+
+* `stat` is a vector the test statistics values for all voxels in the mask.
+* `coef` is a matrix of the parameters tested for all voxels in the mask.
+* `sqrtSigma` is a list of objects that contain everything required to perform statistical inference in the next step. It includes settings that the user chose when running the `lmPBJ` command and features of the test statistic, such as the degrees of freedom and residual degrees of freedom.
+* `formulas` is a list of the formulas used to run `lmPBJ`.
+* `data` is the data set covariates used to fit the model.
+
+
+### Visualizing the results
+
+When multiple parameters are being tested the test statistic is computed as a chi-squared statistical image. We can visualize the image to get an idea of what the results look like before computing p-values for topological features, such as cluster extent p-values.
+The `image` command can be used to create static images at this stage to create figures for papers or quickly visualize the results.
+Because the test statistic is approximately chi-square distributed, we can compute uncorrected image thresholds for visualizing the results.
+If we want to view where the uncorrected p-value $p<0.01$, then we can use the command `qchisq(0.01, df=robustStatMap$sqrtSigma$df, lower.tail=FALSE)=` to obtain an uncorrected threshold for the image.
+For convenience, this can be done with the `image` function by setting the argument `cft_p=0.01`.
+Running `image` without any arguments defaults to a lightbox view.
+Alternatively, the user can specify another plane to visualize, or a set of specific slices.
+
+```{r imageStatMap, fig.width=7.5, fig.cap="Lightbox view of results for the test of the age by sex interaction, with a CFT of $p=0.01$."}
+image(robustStatMap, cft_p=0.01)
+```
+```{r imageStatMapSag, fig.width=7.5, fig.cap="Sagittal lightbox view of results for the test of the age by sex interaction, with a CFT of $p=0.01$."}
+image(robustStatMap, cft_p=0.01, plane = 'sagittal')
+```
+
+The base graphics function `layout` can be used to visualize multiple images in one figure in a custom layout.
+
+```{r, customLayoutStatMap, fig.cap="An example of a custom layout for the test of the age by sex interaction, with a CFT of $p=0.01$."}
+# custom layout visualizing inferior frontal cluster
+layout(matrix(1:6, byrow=TRUE, nrow=1)); image(robustStatMap, cft_p=0.01, plane = 'axial', slice=25:30)
+```
+
+
+
+### Writing the results and viewing interactively
+
+
+Papaya can be used to interactively visualize the statistical image.
+To do this, we first have to write the results to a nifti image on the hard drive. The first two lines of code create a temporary directory to write the image.
+We then use `write.statMap` function to write the image to disk.
+The final line visualizes the statistical image overlayed on the template using Papaya.
+We can use the `qchisq` function as above to threshold the statistical image.
+```{r papayaVisualization}
+# Visualize the chi square image
+statmapFolder = tempfile() # generate a random file folder name
+dir.create(statmapFolder) # create the directory
+files = write.statMap(robustStatMap, outdir=statmapFolder) # write the statistical image
+papaya(c(templatefile, files$stat )) # view the statistical image
+```
+
+
+# Statistical inference
+
+After computing the parametric or robust statistical image for the test of the nonlinear interaction, we can perform different types of inference. Here, we perform inference two ways, using local maxima and cluster extents.
+
+We suggest two methods for estimating the null distribution of the test statistic.
+The first is the permutation procedure (similar to `randomise` by FSL), which has been shown to work well in previous literature (and in our paper; REFS).
+The second is a Rademacher wild bootstrap procedure that we showed to work well in small samples.
+Note that, if using the permutation procedure, the test statistic image is no longer robust to heteroskedasticity, and p-values may not maintain the type 1 error rate.
+That said, in most cases, we have found in simulations that the permutation procedure works very well at controlling the type 1 error rate.
+For a paper, you only need to choose one of the two options. The results should be similar between the two methods. Naturally, we recommend the bootstrap procedure.
+
+We first set some parameters for the analysis:
+* `cft` is the cluster forming threshold. This line converges the p-value thresholds to the chi-squared scale.
+* `nboot` is the number of bootstraps or permutations to run. These are used to compute adjusted and unadjusted p-values.
+
+```{r, pbjInferenceSetup}
+# cluster extent inference
+## cluster forming threshold
+cft = c(0.01, 0.001)
+# number of bootstraps (or permutations) to run
+nboot=5000
+```
+
+
+## Running statistical inference for the robust test statistic images
+
+There are many different options for performing inference for neuroimaging data and the `pbjInference` function can accommodate a wide range of possibilities.
+Below are several examples of ways to run `pbjInference`. It is best to include any inference methods you want to consider, so that you don't have to rerun the bootstrap or permutation procedure each time.
+Here are some key arguments to the `pbjInference`:
+* `statMap` is the object returned by lmPBJ.
+* `statistic` is a function used to compute common topological features of the image.
+* `nboot` is the number of bootstraps to perform.
+* `method` controls what resampling procedure to use.
+* `...` arguments passed to the `statistic` function.
+* `runMode` controls what output is returned. Default is "cdf", which returns the cumulative distribution functions used to compute adjusted and unadjusted p-values for each topological feature.
+
+The `mmeStat` function is the default `statistic` function for `pbjInference` and includes options to run inference on the most common types of topological features, including local maxima, cluster mass inference, and cluster extent inference.
+To perform cluster extent inference (the default), the `mmeStat` function requires that the user specify a vector `cft`, which are the thresholds to use to form contiguous clusters in the statistic image. This is passed to `pbjInference` by the user.
+The final command saves the results in an Rdata file for future use.
+
+In the code below, we use the `pbjInference` command to run the boostrapping in the background. This uses the `r_bg` function from the `callr` package to run the command in the background, so that we can continue to use this session.
+```{r CEI, eval=FALSE}
+
+if(!file.exists(pbjdatafile)){
+  rcallResPBJ <- pbjInference(robustStatMap, rdata_rds=pbjdatafile, nboot = nboot, method='wild', mask = robustStatMap$mask, cft_p = cft)
+  rcallResPBJ$ps_cpu_times()
+}
+
+if(!file.exists(permdatafile)){
+  rcallResPerm <- pbjInferenceBG(robustStatMap, rdata_rds=permdatafile, nboot = nboot, method='permutation', mask = robustStatMap$mask, cft_p = cft)
+}
+```
+
+
+Below is the standard called to `pbjInference` that runs in this session (not in the background).
+This run will perform inference on local maxima and cluster mass statistics.
+
+```{r maximaCEI, eval=FALSE}
+# computes cluster mass inference, and inference for maxima. Does not compute CEI
+maximaCEIstatMap <- pbjInference(robustStatMap, nboot = nboot, method='wild', mask = robustStatMap$mask, cft_p = cft, max=TRUE, CMI=TRUE, CEI=FALSE)
+```
+
+The following code loads in the results of the call to `pbjInferenceBG`. The resulting object is the `statMap` object from the call to `lmPBJ`, with the inference results added.
+
+```{r loadDataFiles}
+if(file.exists(permdatafile)){
+  load(permdatafile)
+  permStatMap <- statMap
+}
+if(file.exists(pbjdatafile)){
+  load(pbjdatafile)
+  robustStatMap <- statMap
+}
+```
+
+
+
+
+## pTFCE inference
+
+This code performs probabilistic threshold free cluster enhancement (pTFCE) inference using the `pTFCE` package.
+It doesn't use resampling and instead relies on GRF-based methods.
+We showed using simulations that it seems to work pretty well in large samples.
+
+```{r, eval=FALSE}
+pbj::ptfce.statmap(robustStatMap)
+```
+
+
+# Summarizing the model results
+
+The `table.statMap` function can be used to visualize the statistical results for each topological feature.
+The default is to present results for cluster extent inference using the first `cft` that was provided by the user.
+The table is sorted largest to smallest by the topological features, in this case, the size of the cluster.
+The two final columns are the unadjusted and adjusted p-values for each cluster.
+Recall that these results are for the test of whether there is an age by sex interaction.
+It looks like the first cluster adjusted p-value is "significant" by conventional standards.
+We can use the write and visualization methods to export the results or make figures for publications.
+
+## Cluster tables
+```{r robustClusterTable, comment=NA}
+permTable = table.statMap(permStatMap)
+robustTable = table.statMap(robustStatMap)
+# This creates a table using the larger cluster forming threshold specified above.
+stringentTable = table.statMap(robustStatMap, cft_p=cft[2])
+
+knitr::kable(permTable[1:5,], row.names = FALSE,
+             digits=3, booktabs=T, caption = "Cluster summary table for permutation test results of the age by sex interaction.")
+knitr::kable(robustTable[1:5,], row.names = FALSE,
+             digits=3, booktabs=T, caption = "Cluster summary table for wild bootstrap test results of the age by sex interaction.")
+```
+
+
+
+## Writing output and interactive visualization
+
+
+```{r writePBJoutput, warning=FALSE, message=FALSE, eval=FALSE}
+pbjOutdir = tempdir()
+result = write.statMap(robustStatMap, pbjOutdir)
+# visualizes template with statistical map and adjusted p-values overlayed
+papaya(c(templatefile, result$stat, result$CEI1[1]))
+#papaya(c(templatefile, result$stat, result$CMI1[1]))
+```
+
+
+## Creating figures
+
+```{r figureColorBar, eval=FALSE}
+#image(robustStatMap, plane = 'axial', cft=cft[1], alpha=0.06, roi=1)
+
+rang = range(robustStatMap$stat)
+layoutMat = cbind(matrix(1:6, nrow=2, byrow=TRUE) %x% matrix(1, nrow=3, ncol=3) , 7)
+layout(layoutMat)
+image(robustStatMap, plane = 'axial', cft_p=cft[1], alpha=0.06, slice=26:31, clusterID = FALSE)
+#mtext('Probability', side=3, outer = TRUE, cex=1*cex, font=2)
+# these margins adjust the height and width of the color bar bottom,left,top,right
+fgcol='white'
+par(mar=c(8,4,8,0.5), mgp=c(3,0.6,0), fg=fgcol, col.axis=fgcol, col.lab=fgcol, col.main = fgcol, col.sub=fgcol)
+colorBar(pbj:::redyellow(64), min=cft[1], max=rang[2], nticks=4, ylab = 'Chi-sq')
+```
+
+
+
+```{r, echo=FALSE, eval=FALSE}
+
+plotResults = function(statMap,  emForm=NULL, method='CEI', roiInds=NULL, ind=1, data=NULL){
+  pbjObj = statMap$pbj
+  if(is.null(pbjObj)) stop('Must run pbjInference to plot results.')
+  st = table.statMap(statMap, method, cft)
+  ind = inferenceIndex(statMap$pbj$obsStat, method=method, cft=cft)
+  rois = pbjObj$ROIs[[ind]]
+  obsstat = pbjObj$obsStat[[ind]]
+  data = statMap$data
+  
+  
+  # load data
+  imgs = RNifti::readNifti(statMap$images)
+  # fit model on average data
+  full = as.formula(statMap$formulas$full)
+  red = as.formula(statMap$formulas$reduced)
+  fullT = terms(full)
+  redT = terms(red)
+  # formula elements to condition on
+  term = attr(fullT, 'term.labels')[!attr(fullT, 'term.labels') %in% attr(redT, 'term.labels') ]
+  condVars = sapply(all.vars(full), function(x) grepl(x, term) )
+  condVars = names(condVars)[condVars]
+  robust = statMap$sqrtSigma$robust
+  data = get_all_vars(full, data=data)
+  for(roiInd in roiInds){
+    data$y = sapply(imgs, function(img) mean(img[ rois==roiInd]) )
+    
+    fullModel = lm(update.formula(full, y ~ .), data=data)
+    #redModel = lm(update.formula(red, y ~ .), data=data)
+    
+    # emmeans argument using condVars
+    # known warning about as.numeric on characters
+    suppressWarnings(ats <- apply(data[,condVars], 2, function(x) sort(unique(ifelse(is.na(as.numeric(x)), x, as.numeric(x) ) ) ) ))
+    emg = emmeans::ref_grid(fullModel, at=ats, data=data)
+    plotdf = as.data.frame(emmeans::emmeans(emg, ~ age | sex))
+    
+    
+    cex=1.5
+    # graphical parameters
+    fgcol = 'white'
+    bgcol = 'black'
+    par(mgp=c(1.7,.7,0), lwd=1.5, lend=2,
+        cex.lab=cex, cex.axis=0.8*cex, cex.main=1*cex,
+        mar=c(3,3,2.2,0), bty='l', oma=c(0,0,0,0), bg=bgcol, fg=fgcol, col.axis=fgcol, col.lab=fgcol, col.main = fgcol, col.sub=fgcol)
+    
+    # plot predictions with raw data
+    cols=c('#fb9a99', '#a6cee3', '#e31a1c', '#1f78b4')
+    plot(data[,'age'], data[,'y'], col=cols[2+as.numeric(factor(data[,'sex']))], pch=16, ylab='Gray matter volume (AU)', xlab='Age (Years)')
+    by(plotdf, plotdf$sex, function(df){
+      polygon(c(df$age, rev(df$age)), c(df$lower.CL, rev(df$upper.CL)), col=scales::alpha(cols[as.numeric(df$sex)], alpha=0.8), border=NA)
+      points(df$age, df$emmean, type='l', col=cols[as.numeric(df$sex)+2])
+    } )
+  }
+}
+plotResults(robustStatMap, roiInds = 1:4)
+
+```
+
+
+
+
+```{r splitSample, echo=FALSE, eval=FALSE}
+CATplot <-function(vec1,vec2,maxrank=5000,make.plot=TRUE,...){ 
+  ##----------------------------------------------------------------------
+  ##----------------------------------------------------------------------
+  ##Fuction for Concordance at the Top plots
+  ##----------------------------------------------------------------------
+  ## vec1 and vec2: ranked lists to use for CAT plot
+  ## maxrank: only go up to maxrank
+  ## make.plot: if TRUE, the plot will be made
+  ## ...: arguments passed on to plot
+  ##----------------------------------------------------------------------  
+  if(class(vec1)=="numeric" & class(vec2)=="numeric" & !is.null(names(vec1)) & !is.null(names(vec1)))
+    {
+      vec1 <- sort(vec1)
+      vec1 <- names(vec1)
+      vec2 <- sort(vec2)
+      vec2 <- names(vec2)
+    }
+  if(is.na(maxrank) | is.null(maxrank) | maxrank > min(length(vec1),length(vec2)))
+    {
+      maxrank <- min(length(vec1),length(vec2))
+    }
+  output <- data.frame(rank=1:maxrank,
+                       concordance=NA)
+  output$concordance = sapply(1:maxrank, function(i){length(intersect(vec1[1:i],vec2[1:i]))/i })
+  if(make.plot){
+    plot(concordance~rank,data=output,type='l',...)
+    abline(a=0,b=1/min(length(vec1),length(vec2)),lty=2)
+  }
+  return(output)
+}
+
+set.seed(1234)
+#lmfull = paste0(" ~+ ns(age, df=4) + sex" )
+#lmred = paste0(" ~ sex + race" )
+inds = sample(nrow(dat), round(nrow(dat)/2))
+dat1 = dat[inds, ]
+dat2 = dat[ -inds,]
+
+lmfull = paste0(" ~ sex * ns(age, df=4)" )
+lmred = paste0(" ~ sex + ns(age, df = 4)" )
+robustStatMap1 <- lmPBJ(dat1$files, form=lmfull, formred=lmred, mask=maskfile, template = templatefile, data=dat1, transform = 't', HC3 = TRUE, robust = TRUE)
+robustStatMap2 <- lmPBJ(dat2$files, form=lmfull, formred=lmred, mask=maskfile, template = templatefile, data=dat2, transform = 't', HC3 = TRUE, robust = TRUE)
+
+
+paramStatMap1 = lmPBJ(dat1$files, form=lmfull, formred=lmred, mask=maskfile, template = templatefile, data=dat1, transform = 't', HC3 = TRUE, robust = FALSE)
+paramStatMap2 = lmPBJ(dat2$files, form=lmfull, formred=lmred, mask=maskfile, template = templatefile, data=dat2, transform = 't', HC3 = TRUE, robust = FALSE)
+```
+
+
+
+```{r splitSampleAge, echo=FALSE, eval=FALSE}
+lmfull = paste0(" ~ sex + ns(age, df=4)" )
+lmred = paste0(" ~ sex" )
+robustStatMap1 <- lmPBJ(dat1$files, form=lmfull, formred=lmred, mask=maskfile, template = templatefile, data=dat1, transform = 't', HC3 = TRUE, robust = TRUE)
+robustStatMap2 <- lmPBJ(dat2$files, form=lmfull, formred=lmred, mask=maskfile, template = templatefile, data=dat2, transform = 't', HC3 = TRUE, robust = TRUE)
+
+
+paramStatMap1 = lmPBJ(dat1$files, form=lmfull, formred=lmred, mask=maskfile, template = templatefile, data=dat1, transform = 't', HC3 = TRUE, robust = FALSE)
+paramStatMap2 = lmPBJ(dat2$files, form=lmfull, formred=lmred, mask=maskfile, template = templatefile, data=dat2, transform = 't', HC3 = TRUE, robust = FALSE)
+
+robustCat = CATplot(rank(robustStatMap1$stat), rank(robustStatMap2$stat), maxrank = 50000, make.plot=FALSE)
+paramCat = CATplot(rank(paramStatMap1$stat), rank(paramStatMap2$stat), maxrank = 50000, make.plot=FALSE)
+
+plot(robustCat, bty='n', type='l')
+lines(paramCat, col='red')
+abline(a=0, b=1/length(paramStatMap1$stat), lty=2)
+```
+
+
+
+# Null simulation results
+
+We performed bootstrap-based and synthetic simulation analyses to evaluate the estimation of the distribution of TF under the global null hypothesis (equation Ref XX).
+
+The type 1 error rates compare the proportion of datasets across all simulations with $p$-values less than the target type 1 error rate and show how accurate each procedure is for hypothesis testing. If the points fall on the identity line then the procedure maintains the type 1 error rate at the nominal level; below the line is conservative, and above the line is anticonservative.
+
+The QQ plots compare the quantiles of the bootstrap distributions to the quantiles of the simulated distribution. Each line represents one simulated data set. The x-axis the the resampled estimates of the quantiles and the y-axis is the quantiles across the simulations, shown for $q\in$XX. This plot shows how good each procedure is at estimating the distribution of the TF (under the null) and the variability of the estimate across data sets.
+The best procedure will fall on the identity line and have a tight clustering around the line.
+
+
+
+## Synthetic null simulations
+
+We simulated data under known heteroskedasticity to evaluate how the different resampling inference procedures perform in reproducing the distributions of TFs under the null.
+All resampling methods had near nominal type 1 error rates under homoskedasticity for parametric and robust test statistics, with the permutation and Rademacher bootstrap methods having slightly better accuracy than the normal bootstrap ({\bf Figure \ref{fig:synthSim}}).
+Under heteroskedasticity the permutation procedure had inflated error rates for parametric statistics, but not for robust test statistics. The two bootstrap methods had near nominal type 1 error rates.
+Simply using a robust covariance estimator resolves the problem with the permutation inference procedure because the procedure is scaling out the differences in the variances across subjects in each permutation by computing the square root covariance matrix as a function of the permuted data \eqref{eq:permutationSampleExchangeability}.
+
+
+
+```{r, eval=TRUE, echo=FALSE}
+# lis A list of numeric vectors. Length of list is equal to number of bootstraps or number of simulations. Each element of the list is a vector of cluster sizes or local maxima within that simulation.
+# probs probabilities for quantiles 
+quantileMarg = function(lis, probs=c(0.95, 0.99), na.rm=TRUE){ 
+  nclusts = sapply(lis, function(y) sum(!is.na(y)))
+  if(length(nclusts)!=0){
+  ans = Hmisc::wtd.quantile(unlist(lis), weights = rep(1/nclusts, nclusts), probs=probs, na.rm=na.rm)
+  } else {
+    ans = quantile(NA, probs=probs, na.rm=TRUE)
+  }
+  ans
+}
+
+
+KL = function(lis1, lis2, np=100, na.rm=TRUE){ 
+  nclusts1 = sapply(lis1, function(y) sum(!is.na(y)))
+  nclusts2 = sapply(lis2, function(y) sum(!is.na(y)))
+  rang = range(unlist(c(lis1, lis2)), na.rm=TRUE, finite=TRUE)
+  ev = locfit::lfgrid(np, rang[1], rang[2])
+  if(length(nclusts1)!=0){
+    l1NAs = is.na(unlist(lis1)) | is.infinite(unlist(lis1))
+    l2NAs = is.na(unlist(lis2)) | is.infinite(unlist(lis2))
+    ans = locfit::density.lf(unlist(lis1)[!l1NAs], n = 100, weights=rep(1/nclusts1, nclusts1)[!l1NAs], ev = ev)
+    ans2 = locfit::density.lf(unlist(lis2)[!l2NAs], n = 100, weights=rep(1/nclusts2, nclusts2)[!l2NAs], ev = ev)
+    zeros = ans$y!=0 & ans2$y!=0
+    # trapezoidal rule to approximate integral
+    ans2$y[zeros] = ans2$y[zeros]/sum(ans2$y[zeros])
+    ans$y[zeros] = ans$y[zeros]/sum(ans$y[zeros])
+    ans = sum(ans2$y[zeros]*log(ans2$y[zeros]/ans$y[zeros]))
+  } else {
+    ans = NA
+  }
+  ans
+}
+
+cdfMarg = function(lis, tstat, na.rm=TRUE){ 
+  nclusts = sapply(lis, function(y) sum(!is.na(y)))
+  if(length(tstat)==0) tstat = 0
+  if(sum(nclusts)==0){
+    ans = rep(NA, length(tstat))
+    } else {
+     # if(length(rep(rep(1/nclusts, nclusts))) != length(unlist(lis))){
+     #   browser()
+     # }
+      #tryCatch({
+  ans = colSums(matrix(rep(rep(1/nclusts, nclusts), length(tstat)), ncol=length(tstat)) * outer(unlist(lis), tstat, '>=' ), na.rm=TRUE)/length(lis)
+  # },
+  # error = function(e){ recover()})
+    }
+  ans
+}
+
+
+
+# Creates plots for figures:
+# First loop through methods to get plot data.
+# Then plot type 1 error rates for all the local methods.
+# Then plot type 1 error rates for all the global methods.
+# Then plot KL divergence for all the local methods.
+plotData = function(rdata, alpha=0.1, stats=NULL){
+  load(rdata)
+  
+  plotDFs = list()
+  qDFs = list()
+  klDFs = list()
+  tfce = list()
+  # This is what should happen if nothing fails. If things fail it will still try to plot the results
+  if(length(dim(results))>1){
+    results = unlist(apply(results, 2, list), recursive=FALSE)
+  }
+  simdirs$results = results# lapply(results, simplify2array)
+  methods = names(simdirs$results[[2]])
+  if(is.null(stats)){
+    stats = c("Maxima", paste('Extent; cft =', simConfig$cfts.p), paste('Mass; cft =', simConfig$cfts.p) )
+  }
+  
+  for(method in methods){
+    methodname = paste(ifelse(grepl('^tStatmap', method), 'Parametric', 'Robust'), ifelse(grepl('Norm', method), 'Normal bootstrap', ifelse(grepl('Rad', method), 'Rademacher bootstrap', 'Permutation') ) , sep="; ")
+    obsStat = do.call(rbind, lapply(simdirs$results, function(y) if(is.null(y)) NA else y[[method]][['obsStat']] ) )
+    colnames(obsStat) = stats
+    # These colnames were sample size dependent
+    maximas = as.data.frame(matrix(unlist(apply(obsStat, 2, function(x) lapply(x, max))), nrow=nrow(obsStat)))
+    names(maximas) = paste('Global', stats)
+    # add global maximums to list of statistics
+    obsStat = cbind(obsStat, maximas)
+    
+    
+    # Arrange each bootstrap like the obsStat setup
+    simdirs$boots = lapply(simdirs$results, function(y) do.call(rbind, lapply(y[[method]][['boots']], function(z0) simplify2array(z0) ) ) )
+    simdirs$boots = lapply(simdirs$boots, function(boot){
+      colnames(boot) = stats
+      maximas = as.data.frame(matrix(unlist(apply(boot, 2, function(x) lapply(x, function(y) max(c(y,0)))) ), nrow=nrow(boot)))
+      names(maximas) = paste('Global', stats)
+      boot = cbind(boot, maximas)
+    })
+    #length.out=pmin(simConfig$nsim, simConfig$nboot)
+    
+    # for(cftInd in 1:ncol(obsStat)){
+    #   #cat(cftInd, '\n')
+    #   colname = colnames(obsStat)[cftInd]
+    #   kldf = do.call(rbind, lapply(split(cbind(simdirs, obsStat[colname]), simdirs$n), function(df){
+    #     #cat(df$n[1], '\n')
+    #     KLs = sapply(df$boots, function(x){KL(x[,colname], df[[colname]], np = 100) } )
+    #     ans = data.frame(n=df$n[1], KL=KLs)
+    #     ans
+    #   }) )
+    #   #cat('\n')
+    #   colnames(kldf)[2] = method
+    #   if(method == methods[1]){
+    #     klDFs[[colname]] = kldf
+    #   } else {
+    #     klDFs[[colname]] = cbind(klDFs[[colname]], kldf[,2])
+    #   }
+    # }
+    
+ 
+    xaxlab = c(0.75, 0.9, 0.95, 0.99)
+    for(cftInd in 1:ncol(obsStat)){
+      colname = colnames(obsStat)[cftInd]
+      adjustMethod = if(grepl('Global', colname)) 'none' else 'BH'
+      
+      cat(colname)
+      plotData = do.call(rbind, lapply(split(cbind(simdirs, obsStat[colname]), simdirs$n), function(df){
+        
+        pvalues = mapply(cdfMarg, lapply(df$boots, function(x) x[,colname]), df[,colname] )
+        minPvalues = sapply(pvalues, function(pvalue) min(p.adjust(pvalue, method=adjustMethod), na.rm=TRUE))
+        #ylims = range(quantiles, na.rm=TRUE )
+        x = 1-xaxlab
+        y = colMeans(outer(minPvalues, x, '<='), na.rm=TRUE)
+        out = data.frame(x=x, y=y, n=df$n[1])
+      }) )
+      names(plotData)[2] = method
+      # put the output into the variable colname
+      if(method == methods[1]){
+        plotDFs[[colname]] = plotData
+      } else {
+        plotDFs[[colname]] = merge(plotDFs[[colname]], plotData)
+      }
+    }
+    
+    
+    ## For the QQ-plot
+    xaxlab = c(0.75, 0.9, 0.95, 0.99)
+    for(cftInd in 1:ncol(obsStat)){
+      colname = colnames(obsStat)[cftInd]
+      
+      xlims = range(unlist(lapply(split(obsStat[[colname]], simdirs$n), quantileMarg, probs=xaxlab) ))
+      
+      plotData = lapply(split(cbind(simdirs, obsStat[colname]), simdirs$n), function(df){
+        quantiles = sapply(df$boots, function(x) quantileMarg(x[,colname], probs=xaxlab) )
+        #ylims = range(quantiles, na.rm=TRUE )
+        
+        x = quantileMarg(df[,colname], probs=xaxlab)
+        # first column is observed quantiles across the simulations
+        quantiles = cbind(x, quantiles)
+        return(quantiles)
+        #plot(x, ylim=ylims, xlim=xlims, type='n', ylab='', xlab='', main=paste0('n = ', df$n[1], '; ',  colname))
+        #axis(side=1, at=xaxt, labels=xaxlab)
+        #abline(v=xaxt, col='orange', lty=2)
+        #for(ind in 1:simConfig$nboot){
+        #  points(x, quantiles[,ind], type='l')
+        #}
+        #abline(a=0,b=1, col='blue')
+      })
+      ns = as.numeric(names(plotData))
+      plotData = as.data.frame(do.call(rbind, plotData))
+      plotData$n = rep(ns, each=length(xaxlab))
+      plotData$method = method
+      if(method == methods[1]){
+        qDFs[[colname]] = plotData
+      } else {
+        qDFs[[colname]] = rbind(qDFs[[colname]], plotData)
+      }
+    }
+    
+ 
+  }
+  #klDFs = lapply(klDFs, function(x){names(x)[-1] = methods; x})
+  return(list(error=plotDFs, qq=qDFs)) #KL=klDFs, 
+}
+
+
+errorPlots = function(plotData, nsim, tStat=TRUE, global=FALSE, alpha=0.1){
+  
+  # graphical parameters
+  cex=1.5
+  par(mgp=c(1.8,.7,0), lwd=1.5, lend=2, cex.lab=0.8*cex, cex.axis=0.8*cex, cex.main=0.6*cex, mfrow=c(1,1), mar=c(1.7,1.7,1.8,.5), bty='l', oma=c(2,2,2,0))
+  brewcols =  rep(RColorBrewer::brewer.pal(n=length(methods)/2, name='Dark2'), 2)
+  
+  lis = plotData[['error']]
+  stats = grep('Global', names(lis), invert=!global, value=TRUE)
+  if(!global){ # don't plot tfce for non global statistics
+    stats = grep('TFCE', stats, value=TRUE, invert=TRUE)
+  }
+  minn = min(lis[[stats[1]]]$n)
+  nplots = length(stats) * length(unique(lis[[stats[1]]]$n))
+  layout(matrix(1:(nplots), nrow=length(stats), byrow=TRUE) )
+  # for each type of statistic, make a row of plots
+  for(stat in stats){
+    # for each sample size, make a plot
+    lapply(split(lis[[stat]], lis[[stat]]$n), function(df){
+           n = df$n[1]
+           x = df$x
+           methods = names(df)[ ! names(df) %in% c('x', 'n')]
+           
+           methodnames = paste(ifelse(grepl('tStatmap', methods), 'Parametric', 'Robust'), ifelse(grepl('Norm', methods), 'Normal bootstrap', ifelse(grepl('Rad', methods), 'Rademacher bootstrap', 'Permutation') ) , sep="; ")
+           
+           # T-statistics
+           tmethodinds = grep('^tStatmap_', methods, invert=!tStat)
+           rang = range(c(df[,methods[tmethodinds]], x))
+           
+           plot(x, df[,methods[tmethodinds[1] ] ], type='b', xlim=rang, ylim=rang, ylab='', xlab='', main=paste0('n = ', n, '; ',  stat), col=brewcols[1])
+           for(ind in tmethodinds[-1]){
+             points(x, df[,methods[ind]], type='b', col=brewcols[ind])
+           }
+           points(x, qbinom(alpha/2, nsim, x)/nsim, type='l', lty=2, col='gray')
+           points(x, qbinom(1-alpha/2, nsim, x)/nsim, type='l', lty=2, col='gray')
+           abline(a=0,b=1, col='gray')
+           # hard-coded if statement
+           if(stat==stats[1] & n==minn){
+           legend('bottomright', # Find suitable coordinates by trial and error
+                  c('NB', 'Perm', 'RB'), fill=brewcols[1:3], bty='n', cex=1.2)
+           }
+    })
+  }
+  mtext(ifelse(tStat, 'Parametric', 'Robust'), outer=TRUE, font=2)
+  mtext('Target type 1 error', outer=TRUE, side = 1)
+  mtext('Actual type 1 error', outer=TRUE, side=2)
+}
+
+
+
+klPlots = function(plotData, nsim, tStat=TRUE, global=FALSE, alpha=0.1){
+  
+  # graphical parameters
+  cex=1.5
+  par(mgp=c(1.8,.7,0), lwd=1.5, lend=2, cex.lab=0.8*cex, cex.axis=0.8*cex, cex.main=0.6*cex, mfrow=c(1,1), mar=c(1.7,1.7,1.8,.5), bty='l', oma=c(2,2,2,0))
+  
+  lis = plotData[['KL']]
+  stats = grep('Global', names(lis), invert=!global, value=TRUE)
+  nplots = length(stats) * length(unique(lis[[stats[1]]]$n))
+  layout(matrix(1:(nplots), nrow=length(stats), byrow=TRUE) )
+  # for each type of statistic, make a row of plots
+  for(stat in stats){
+    # for each sample size, make a plot
+    lapply(split(lis[[stat]], lis[[stat]]$n), function(df){
+           n = df$n[1]
+           methods = names(df)[ ! names(df) %in% c('x', 'n')]
+           
+           brewcols =  rep(RColorBrewer::brewer.pal(n=length(methods)/2, name='Dark2'), 2)
+           methodnames = paste(ifelse(grepl('tStatmap', methods), 'Parametric', 'Robust'), ifelse(grepl('Norm', methods), 'Normal bootstrap', ifelse(grepl('Rad', methods), 'Rademacher bootstrap', 'Permutation') ) , sep="; ")
+           
+           # T-statistics
+           tmethodinds = grep('^tStatmap_', methods, invert=!tStat)
+           #rang = range(c(df[,methods[tmethodinds]]))
+           
+           pm = as.matrix(df[,methods[tmethodinds]])
+           pm[is.infinite(pm)] = NA
+           vioplot::vioplot(pm, col = brewcols[tmethodinds],
+        xlab = "", ylab = "", main=paste0('n = ', n, '; ',  stat), names=c('NB', 'Perm', 'RB'))
+    })
+  
+  mtext(ifelse(tStat, 'Parametric', 'Robust'), outer=TRUE, font=2)
+  mtext('Method', outer=TRUE, side = 1)
+  mtext('KL Divergence', outer=TRUE, side=2)
+  }
+}
+
+
+
+qqPlots = function(plotData, nsim, tStat=TRUE, global=FALSE){
+  
+  # graphical parameters
+  cex=1.5
+  par(mgp=c(1.8,.7,0), lwd=1.5, lend=2, cex.lab=0.8*cex, cex.axis=0.8*cex, cex.main=0.6*cex, mfrow=c(1,1), mar=c(1.7,1.7,1.8,.5), bty='l', oma=c(2,2,2,0))
+  
+  lis = plotData[['qq']]
+  stats = grep('Global', names(lis), invert=!global, value=TRUE)
+  if(!global){ # don't plot tfce for non global statistics
+    stats = grep('TFCE', stats, value=TRUE, invert=TRUE)
+  }
+  nplots = length(stats) * length(unique(lis[[stats[1]]]$n))
+  layout(matrix(1:(nplots), nrow=length(stats), byrow=TRUE) )
+  # for each type of statistic, make a row of plots
+  for(stat in stats){
+          methods = unique(lis[[stat]]$method)
+          methodnames = paste(ifelse(grepl('tStatmap', methods), 'Parametric', 'Robust'), ifelse(grepl('Norm', methods), 'Normal bootstrap', ifelse(grepl('Rad', methods), 'Rademacher bootstrap', 'Permutation') ) , sep="; ")
+          brewcols =  rep(RColorBrewer::brewer.pal(n=length(methods)/2, name='Dark2'), 2)
+          # T-statistics
+          tmethodinds = grep('^tStatmap_', methods, invert=!tStat, value=TRUE)
+          yrang = quantile(unlist(lis[[stat]][lis[[stat]]$method %in% tmethodinds,2:(nsim+1)]), probs = c(0.01, 0.99))
+          xrang = range(lis[[stat]][lis[[stat]]$method %in% tmethodinds,1])
+    # for each sample size, make a plot
+    lapply(split(lis[[stat]], lis[[stat]]$n), function(df){
+           n = df$n[1]
+           x = df$x[df$method==tmethodinds[1]]
+           plot(x, df[df$method==tmethodinds[1], 2], type='n', xlim=xrang, ylim=yrang, ylab='', xlab='', main=paste0('n = ', n, '; ',  stat))
+           for(ind in 1:nsim){
+             points(x, df[df$method==tmethodinds[1], ind+1], type='l', lwd=0.5, col=brewcols[1]) # , col=brewcols[ind]
+             points(x, df[df$method==tmethodinds[2], ind+1], type='l', lwd=0.5, col=brewcols[2])
+             points(x, df[df$method==tmethodinds[3], ind+1], type='l', lwd=0.5, col=brewcols[3])
+           }
+           abline(a=0,b=1, col='gray')
+           # hard-coded if statement
+           if(stat==stats[1] & n==25){
+           legend('topleft', # Find suitable coordinates by trial and error
+                  c('NB', 'Perm', 'RB'), fill=brewcols[1:3], bty='n', cex=1.2)
+           }
+    })
+  }
+  mtext(ifelse(tStat, 'Parametric', 'Robust'), outer=TRUE, font=2)
+  mtext('Simulated quantiles', outer=TRUE, side = 1)
+  mtext('Resampled quantiles', outer=TRUE, side=2)
+}
+
+
+# qqPlots2 = function(plotData, nsim, tStat=TRUE, global=FALSE){
+#   
+#   # graphical parameters
+#   cex=1.5
+#   par(mgp=c(1.8,.7,0), lwd=1.5, lend=2, cex.lab=0.8*cex, cex.axis=0.8*cex, cex.main=0.6*cex, mfrow=c(1,1), mar=c(1.7,1.7,1.8,.5), bty='l', oma=c(2,2,2,0))
+#   
+#   lis = plotData[['qq']]
+#   stats = grep('Global', names(lis), invert=!global, value=TRUE)
+#   if(!global){ # don't plot tfce for non global statistics
+#     stats = grep('TFCE', stats, value=TRUE, invert=TRUE)
+#   }
+#   nplots = length(stats) * length(unique(lis[[stats[1]]]$n))
+#   layout(matrix(1:(nplots), nrow=length(stats), byrow=TRUE) )
+#   # for each type of statistic, make a row of plots
+#   for(stat in stats){
+#           methods = unique(lis[[stat]]$method)
+#           methodnames = paste(ifelse(grepl('tStatmap', methods), 'Parametric', 'Robust'), ifelse(grepl('Norm', methods), 'Normal bootstrap', ifelse(grepl('Rad', methods), 'Rademacher bootstrap', 'Permutation') ) , sep="; ")
+#           brewcols =  rep(RColorBrewer::brewer.pal(n=length(methods)/2, name='Dark2'), 2)
+#           # T-statistics
+#           tmethodinds = grep('^tStatmap_', methods, invert=!tStat, value=TRUE)
+#           yrang = quantile(unlist(lis[[stat]][lis[[stat]]$method %in% tmethodinds,2:(nsim+1)]), probs = c(0.01, 0.99))
+#           xrang = range(lis[[stat]][lis[[stat]]$method %in% tmethodinds,1])
+#     # for each sample size, make a plot
+#     lapply(split(lis[[stat]], lis[[stat]]$n), function(df){
+#            n = df$n[1]
+#            x = df$x[df$method==tmethodinds[1]]
+#            plot(x, df[df$method==tmethodinds[1], 2], type='n', xlim=xrang, ylim=yrang, ylab='', xlab='', main=paste0('n = ', n, '; ',  stat))
+#              points(x, rowMeans(df[df$method==tmethodinds[1], (1:nsim)+1]), type='l', lwd=0.5, col=brewcols[1]) # , col=brewcols[ind]
+#              points(x, df[df$method==tmethodinds[2], ind+1], type='l', lwd=0.5, col=brewcols[2])
+#              points(x, df[df$method==tmethodinds[3], ind+1], type='l', lwd=0.5, col=brewcols[3])
+#            }
+#            abline(a=0,b=1, col='gray')
+#            # hard-coded if statement
+#            if(stat==stats[1] & n==25){
+#            legend('topleft', # Find suitable coordinates by trial and error
+#                   c('NB', 'Perm', 'RB'), fill=brewcols[1:3], bty='n', cex=1.2)
+#            }
+#     })
+#   }
+#   mtext(ifelse(tStat, 'Parametric', 'Robust'), outer=TRUE, font=2)
+#   mtext('Simulated quantiles', outer=TRUE, side = 1)
+#   mtext('Resampled quantiles', outer=TRUE, side=2)
+# }
+```
+
+
+
+## Bootstrap null simulations using a factor covariate
+
+In order to evaluate the type 1 error rate when performing an F-test of a factor covariate we simulated group independently of the imaging data and the bootstrap samples of the imaging data were modeled and tested on 3 degrees of freedom (4 groups).
+We evaluate parametric and robust test statistics and marginal and global null distributions as described in Section XX and Table XX.
+Type 1 error rates and QQ-plots are shown below.
+We gave a description of how to interpret the plots above in Section XX.
+
+
+### Marginal distribution 
+
+```{r, eval=TRUE, echo=FALSE, cache=TRUE, fig.cap="Actual versus target type 1 error rates for the inference procedures considered for testing the marginal distribution of each topological feature (TF) of the parametric test statistics image."}
+pd = plotData("/media/disk2/pbj/pbj_ftest/df3_fakegroup.rdata", stats=c("Maxima", "Mass; cft = 0.01", "Mass; cft = 0.001", "Extent; cft = 0.01", "Extent; cft = 0.001"))
+nsim = 500
+errorPlots(pd, nsim=nsim, tStat = TRUE, global=FALSE)
+```
+
+```{r, eval=TRUE, echo=FALSE, fig.cap="Actual versus target type 1 error rates for the inference procedures considered for testing the marginal distribution of each topological feature (TF) of the robust test statistics image."}
+errorPlots(pd, nsim=nsim, tStat = FALSE, global=FALSE)
+```
+
+```{r, eval=FALSE, echo=FALSE, fig.cap="QQ-plot for the inference procedures considered for the marginal distribution of each topological feature (TF) of the parametric test statistics image."}
+qqPlots(pd, nsim=nsim, tStat = TRUE, global=FALSE)
+```
+
+```{r, eval=FALSE, echo=FALSE, fig.cap="QQ-plot for the inference procedures considered for the marginal distribution of each topological feature (TF) of the robust test statistics image."}
+qqPlots(pd, nsim=nsim, tStat = FALSE, global=FALSE)
+```
+
+
+### Global distributions
+
+```{r, eval=TRUE, echo=FALSE, fig.cap="Actual versus target type 1 error rates for the inference procedures considered for testing the distribution of the global maximum of each topological feature (TF) of the parametric test statistics image."}
+errorPlots(pd, nsim=nsim, tStat = TRUE, global=TRUE)
+```
+
+```{r, eval=TRUE, echo=FALSE, fig.cap="Actual versus target type 1 error rates for the inference procedures considered for testing the distribution of the global maximum of each topological feature (TF) of the robust test statistics image."}
+errorPlots(pd, nsim=nsim, tStat = FALSE, global=TRUE)
+```
+
+```{r, eval=FALSE, echo=FALSE, fig.cap="QQ-plot for the inference procedures considered for the distribution of the global maximum of each topological feature (TF) of the parametric test statistics image."}
+qqPlots(pd, nsim=nsim, tStat = TRUE, global=TRUE)
+```
+
+```{r, eval=FALSE, echo=FALSE, fig.cap="QQ-plot for the inference procedures considered for the distribution of the global maximum of each topological feature (TF) of the robust test statistics image."}
+qqPlots(pd, nsim=nsim, tStat = FALSE, global=TRUE)
+```
+
+
+
+## Simulations using a nonlinear continuous covariate
+
+We generated a continuous covariate independently and modeled using penalized splines on 4 degrees of freedom. This model was tested against one where the same covariate was included linearly.
+
+
+### Marginal distribution 
+
+```{r, eval=FALSE, echo=FALSE, cache=TRUE, fig.cap="Actual versus target type 1 error rates for the inference procedures considered for testing the marginal distribution of each topological feature (TF) of the parametric test statistics image."}
+pd = plotData("/media/disk2/pbj/pbj_ftest/df3_spline_randomX.rdata", stats=c("Maxima", "Mass; cft = 0.01", "Mass; cft = 0.001", "Extent; cft = 0.01", "Extent; cft = 0.001"))
+nsim = 500
+errorPlots(pd, nsim=nsim, tStat = TRUE, global=FALSE)
+```
+
+```{r, eval=FALSE, echo=FALSE, fig.cap="Actual versus target type 1 error rates for the inference procedures considered for testing the marginal distribution of each topological feature (TF) of the robust test statistics image."}
+errorPlots(pd, nsim=nsim, tStat = FALSE, global=FALSE)
+```
+
+```{r, eval=FALSE, echo=FALSE, fig.cap="QQ-plot for the inference procedures considered for the marginal distribution of each topological feature (TF) of the parametric test statistics image."}
+qqPlots(pd, nsim=nsim, tStat = TRUE, global=FALSE)
+```
+
+```{r, eval=FALSE, echo=FALSE,fig.cap="QQ-plot for the inference procedures considered for the marginal distribution of each topological feature (TF) of the robust test statistics image."}
+qqPlots(pd, nsim=nsim, tStat = FALSE, global=FALSE)
+```
+
+
+### Global distributions
+
+```{r, eval=FALSE,  echo=FALSE, fig.cap="Actual versus target type 1 error rates for the inference procedures considered for testing the distribution of the global maximum of each topological feature (TF) of the parametric test statistics image."}
+errorPlots(pd, nsim=nsim, tStat = TRUE, global=TRUE)
+```
+
+```{r, eval=FALSE,  echo=FALSE, fig.cap="Actual versus target type 1 error rates for the inference procedures considered for testing the distribution of the global maximum of each topological feature (TF) of the robust test statistics image."}
+errorPlots(pd, nsim=nsim, tStat = FALSE, global=TRUE)
+```
+
+```{r, eval=FALSE,  echo=FALSE,fig.cap="QQ-plot for the inference procedures considered for the distribution of the global maximum of each topological feature (TF) of the parametric test statistics image."}
+qqPlots(pd, nsim=nsim, tStat = TRUE, global=TRUE)
+```
+
+```{r, eval=FALSE, echo=FALSE, fig.cap="QQ-plot for the inference procedures considered for the distribution of the global maximum of each topological feature (TF) of the robust test statistics image."}
+qqPlots(pd, nsim=nsim, tStat = FALSE, global=TRUE)
+```
+
+# References
+
+
+```{r}
+knitr::write_bib(.packages(), "packages.bib")
+```
+
+
+
+# Appendix
+
+# Supplementary Material
+
+## NKI-RS Voxel-based morphometry processing and quality control
+
+Prior to processing, 695 T1 images were visually inspected for quality.
+Voxel-based morphometry (VBM) completed in 693 scans using the Computational Anatomy Toolbox 12 (CAT12: Version 12.5) in Statistical Parametric Mapping 12 (SPM12: Version 7487) [@ashburner_unified_2005,@ashburner_computational_2009].
+T1-weighted structural images were corrected for bias-field inhomogeneities, registered using linear (12 parameter affine) and non-linear transformations, then spatially normalized using the DARTEL algorithm, and segmented into gray matter, white matter and cerebrospinal fluid [@ashburner_fast_2007].
+Further quality control was conducted using the CAT12’s quality assurance framework.
+This is a retrospective, quantitative measure that evaluates image parameters such as noise, inhomogeneities and image resolution, placing images on a rating scale and assigning a letter grade to each image.  Any scan rated B- or above is considered good quality, and any scans rated C- to C+ are considered satisfactory.  In our data, all CAT12 output rated C+ or below were further visually inspected for gray matter segmentation quality.
+Any scan with gray matter segmentation that did not capture the gray matter, or included non-gray matter voxels, were excluded from further analysis.
+A total of 682 participants passed this quality inspection criteria and had complete demographic data.

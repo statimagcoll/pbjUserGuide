@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>3 pbj software overview | pbj User’s Guide</title>
+  <meta name="description" content="3 pbj software overview | pbj User’s Guide" />
+  <meta name="generator" content="bookdown 0.25 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="3 pbj software overview | pbj User’s Guide" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="3 pbj software overview | pbj User’s Guide" />
+  
+  
+  
+
+<meta name="author" content="Simon Vandekar, Kaidi Kang, Anna Huang, Neil Woodward" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="methods.html"/>
+<link rel="next" href="pbj-tutorials.html"/>
+<script src="assets/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="assets/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="assets/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="assets/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="assets/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="assets/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="assets/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="assets/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="assets/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="assets/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="assets/anchor-sections-1.1.0/anchor-sections.js"></script>
+<link href="assets/table1-1.0/table1_defaults.css" rel="stylesheet" />
+<script src="assets/core-js-2.5.3/shim.min.js"></script>
+<script src="assets/react-17.0.0/react.min.js"></script>
+<script src="assets/react-17.0.0/react-dom.min.js"></script>
+<script src="assets/reactwidget-1.0.0/react-tools.js"></script>
+<script src="assets/htmlwidgets-1.5.3/htmlwidgets.js"></script>
+<link href="assets/reactable-0.4.4/reactable.css" rel="stylesheet" />
+<script src="assets/reactable-binding-0.4.4/reactable.js"></script>
+<link href="assets/papaya-0.1449/papaya.css" rel="stylesheet" />
+<link href="assets/papaya-0.1449/base.css" rel="stylesheet" />
+<script src="assets/papaya-0.1449/papaya.js"></script>
+<script src="assets/papaya-0.1449/main.js"></script>
+<script src="assets/papayaWidget-binding-0.7.1/papayaWidget.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="introduction.html#introduction" id="toc-introduction"><span class="toc-section-number">1</span> Introduction<span></span></a></li>
+<li><a href="methods.html#methods" id="toc-methods"><span class="toc-section-number">2</span> Methods<span></span></a>
+<ul>
+<li><a href="methods.html#data-and-data-availability" id="toc-data-and-data-availability"><span class="toc-section-number">2.1</span> Data and data availability<span></span></a>
+<ul>
+<li><a href="methods.html#preprocessed-autism-brain-imaging-data-exchange" id="toc-preprocessed-autism-brain-imaging-data-exchange"><span class="toc-section-number">2.1.1</span> Preprocessed Autism Brain Imaging Data Exchange<span></span></a></li>
+<li><a href="methods.html#twenty-one-pain-studies" id="toc-twenty-one-pain-studies"><span class="toc-section-number">2.1.2</span> Twenty-one pain studies<span></span></a></li>
+<li><a href="methods.html#nathan-kline-institute-rockland-sample" id="toc-nathan-kline-institute-rockland-sample"><span class="toc-section-number">2.1.3</span> Nathan-Kline Institute Rockland Sample<span></span></a></li>
+</ul></li>
+<li><a href="methods.html#pbj-analysis-methods" id="toc-pbj-analysis-methods"><span class="toc-section-number">2.2</span> PBJ analysis methods<span></span></a>
+<ul>
+<li><a href="methods.html#model-estimation" id="toc-model-estimation"><span class="toc-section-number">2.2.1</span> Model estimation<span></span></a></li>
+<li><a href="methods.html#statistical-inference" id="toc-statistical-inference"><span class="toc-section-number">2.2.2</span> Statistical inference<span></span></a></li>
+</ul></li>
+<li><a href="methods.html#evaluation-under-the-global-null-hypothesis" id="toc-evaluation-under-the-global-null-hypothesis"><span class="toc-section-number">2.3</span> Evaluation under the global null hypothesis<span></span></a>
+<ul>
+<li><a href="methods.html#null-synthetic-simulations" id="toc-null-synthetic-simulations"><span class="toc-section-number">2.3.1</span> Null synthetic simulations<span></span></a></li>
+<li><a href="methods.html#null-bootstrap-simulations" id="toc-null-bootstrap-simulations"><span class="toc-section-number">2.3.2</span> Null bootstrap simulations<span></span></a></li>
+</ul></li>
+<li><a href="methods.html#evaluation-under-an-alternative-hypothesis" id="toc-evaluation-under-an-alternative-hypothesis"><span class="toc-section-number">2.4</span> Evaluation under an alternative hypothesis<span></span></a></li>
+<li><a href="methods.html#synthetic-simulations" id="toc-synthetic-simulations"><span class="toc-section-number">2.5</span> Synthetic simulations<span></span></a></li>
+<li><a href="methods.html#bootstrap-simulations" id="toc-bootstrap-simulations"><span class="toc-section-number">2.6</span> Bootstrap simulations<span></span></a></li>
+</ul></li>
+<li><a href="pbj-software-overview.html#pbj-software-overview" id="toc-pbj-software-overview"><span class="toc-section-number">3</span> <code>pbj</code> software overview<span></span></a>
+<ul>
+<li><a href="pbj-software-overview.html#installation" id="toc-installation"><span class="toc-section-number">3.1</span> Installation<span></span></a></li>
+<li><a href="pbj-software-overview.html#analysis-setup" id="toc-analysis-setup"><span class="toc-section-number">3.2</span> Analysis setup<span></span></a></li>
+<li><a href="pbj-software-overview.html#software-structure-and-general-workflow" id="toc-software-structure-and-general-workflow"><span class="toc-section-number">3.3</span> Software structure and general workflow<span></span></a>
+<ul>
+<li><a href="pbj-software-overview.html#lmPBJ" id="toc-lmPBJ"><span class="toc-section-number">3.3.1</span> Model estimation using the <code>lmPBJ</code> function<span></span></a></li>
+<li><a href="pbj-software-overview.html#pbjInference" id="toc-pbjInference"><span class="toc-section-number">3.3.2</span> Statistical inference using the <code>pbjInference</code> function<span></span></a></li>
+</ul></li>
+</ul></li>
+<li><a href="pbj-tutorials.html#pbj-tutorials" id="toc-pbj-tutorials"><span class="toc-section-number">4</span> <code>pbj</code> tutorials<span></span></a>
+<ul>
+<li><a href="pbj-tutorials.html#preprocessed-abide-analysis" id="toc-preprocessed-abide-analysis"><span class="toc-section-number">4.1</span> Preprocessed ABIDE analysis<span></span></a>
+<ul>
+<li><a href="pbj-tutorials.html#whole-brain-exploratory-analysis" id="toc-whole-brain-exploratory-analysis"><span class="toc-section-number">4.1.1</span> Whole-brain exploratory analysis<span></span></a></li>
+<li><a href="pbj-tutorials.html#voxel-wise-analysis-with-lmpbj" id="toc-voxel-wise-analysis-with-lmpbj"><span class="toc-section-number">4.1.2</span> Voxel-wise analysis with <code>lmPBJ</code><span></span></a></li>
+<li><a href="pbj-tutorials.html#topological-inference-maxima-cei-cmi" id="toc-topological-inference-maxima-cei-cmi"><span class="toc-section-number">4.1.3</span> Topological inference (Maxima, CEI, CMI)<span></span></a></li>
+<li><a href="pbj-tutorials.html#interpreting-and-visualizing-pbjinference-results" id="toc-interpreting-and-visualizing-pbjinference-results"><span class="toc-section-number">4.1.4</span> Interpreting and visualizing <code>pbjInference</code> results<span></span></a></li>
+</ul></li>
+<li><a href="pbj-tutorials.html#pain-meta-analysis" id="toc-pain-meta-analysis"><span class="toc-section-number">4.2</span> Pain meta-analysis<span></span></a>
+<ul>
+<li><a href="pbj-tutorials.html#pain-related-activation" id="toc-pain-related-activation"><span class="toc-section-number">4.2.1</span> Pain-related activation<span></span></a></li>
+<li><a href="pbj-tutorials.html#software-related-differences-in-pain-meta-analysis" id="toc-software-related-differences-in-pain-meta-analysis"><span class="toc-section-number">4.2.2</span> Software related differences in pain meta-analysis<span></span></a></li>
+</ul></li>
+<li><a href="pbj-tutorials.html#nki-rs-analysis" id="toc-nki-rs-analysis"><span class="toc-section-number">4.3</span> NKI-RS analysis<span></span></a>
+<ul>
+<li><a href="pbj-tutorials.html#loading-data-and-basic-image-processing" id="toc-loading-data-and-basic-image-processing"><span class="toc-section-number">4.3.1</span> Loading data and basic image processing<span></span></a></li>
+<li><a href="pbj-tutorials.html#model-specification" id="toc-model-specification"><span class="toc-section-number">4.3.2</span> Model specification<span></span></a></li>
+<li><a href="pbj-tutorials.html#visualizing-the-results" id="toc-visualizing-the-results"><span class="toc-section-number">4.3.3</span> Visualizing the results<span></span></a></li>
+<li><a href="pbj-tutorials.html#writing-the-results-and-viewing-interactively" id="toc-writing-the-results-and-viewing-interactively"><span class="toc-section-number">4.3.4</span> Writing the results and viewing interactively<span></span></a></li>
+</ul></li>
+</ul></li>
+<li><a href="statistical-inference-1.html#statistical-inference-1" id="toc-statistical-inference-1"><span class="toc-section-number">5</span> Statistical inference<span></span></a>
+<ul>
+<li><a href="statistical-inference-1.html#running-statistical-inference-for-the-robust-test-statistic-images" id="toc-running-statistical-inference-for-the-robust-test-statistic-images"><span class="toc-section-number">5.1</span> Running statistical inference for the robust test statistic images<span></span></a></li>
+<li><a href="statistical-inference-1.html#ptfce-inference" id="toc-ptfce-inference"><span class="toc-section-number">5.2</span> pTFCE inference<span></span></a></li>
+</ul></li>
+<li><a href="summarizing-the-model-results.html#summarizing-the-model-results" id="toc-summarizing-the-model-results"><span class="toc-section-number">6</span> Summarizing the model results<span></span></a>
+<ul>
+<li><a href="summarizing-the-model-results.html#cluster-tables" id="toc-cluster-tables"><span class="toc-section-number">6.1</span> Cluster tables<span></span></a></li>
+<li><a href="summarizing-the-model-results.html#writing-output-and-interactive-visualization" id="toc-writing-output-and-interactive-visualization"><span class="toc-section-number">6.2</span> Writing output and interactive visualization<span></span></a></li>
+<li><a href="summarizing-the-model-results.html#creating-figures" id="toc-creating-figures"><span class="toc-section-number">6.3</span> Creating figures<span></span></a></li>
+</ul></li>
+<li><a href="null-simulation-results.html#null-simulation-results" id="toc-null-simulation-results"><span class="toc-section-number">7</span> Null simulation results<span></span></a>
+<ul>
+<li><a href="null-simulation-results.html#synthetic-null-simulations" id="toc-synthetic-null-simulations"><span class="toc-section-number">7.1</span> Synthetic null simulations<span></span></a></li>
+<li><a href="null-simulation-results.html#bootstrap-null-simulations-using-a-factor-covariate" id="toc-bootstrap-null-simulations-using-a-factor-covariate"><span class="toc-section-number">7.2</span> Bootstrap null simulations using a factor covariate<span></span></a>
+<ul>
+<li><a href="null-simulation-results.html#marginal-distribution" id="toc-marginal-distribution"><span class="toc-section-number">7.2.1</span> Marginal distribution<span></span></a></li>
+<li><a href="null-simulation-results.html#global-distributions" id="toc-global-distributions"><span class="toc-section-number">7.2.2</span> Global distributions<span></span></a></li>
+</ul></li>
+<li><a href="null-simulation-results.html#simulations-using-a-nonlinear-continuous-covariate" id="toc-simulations-using-a-nonlinear-continuous-covariate"><span class="toc-section-number">7.3</span> Simulations using a nonlinear continuous covariate<span></span></a>
+<ul>
+<li><a href="null-simulation-results.html#marginal-distribution-1" id="toc-marginal-distribution-1"><span class="toc-section-number">7.3.1</span> Marginal distribution<span></span></a></li>
+<li><a href="null-simulation-results.html#global-distributions-1" id="toc-global-distributions-1"><span class="toc-section-number">7.3.2</span> Global distributions<span></span></a></li>
+</ul></li>
+</ul></li>
+<li><a href="references.html#references" id="toc-references"><span class="toc-section-number">8</span> References<span></span></a></li>
+<li><a href="appendix.html#appendix" id="toc-appendix"><span class="toc-section-number">9</span> Appendix<span></span></a></li>
+<li><a href="supplementary-material.html#supplementary-material" id="toc-supplementary-material"><span class="toc-section-number">10</span> Supplementary Material<span></span></a>
+<ul>
+<li><a href="supplementary-material.html#nki-rs-voxel-based-morphometry-processing-and-quality-control" id="toc-nki-rs-voxel-based-morphometry-processing-and-quality-control"><span class="toc-section-number">10.1</span> NKI-RS Voxel-based morphometry processing and quality control<span></span></a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">pbj User’s Guide</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="pbj-software-overview" class="section level1 hasAnchor" number="3">
+<h1><span class="header-section-number">3</span> <code>pbj</code> software overview<a href="pbj-software-overview.html#pbj-software-overview" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="installation" class="section level2 hasAnchor" number="3.1">
+<h2><span class="header-section-number">3.1</span> Installation<a href="pbj-software-overview.html#installation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The latest stable version of the <code>pbj</code> package can be installed from github.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="pbj-software-overview.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install the latest version of the package from github.</span></span>
+<span id="cb1-2"><a href="pbj-software-overview.html#cb1-2" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">&#39;statimagcoll/pbj&#39;</span>)</span></code></pre></div>
+</div>
+<div id="analysis-setup" class="section level2 hasAnchor" number="3.2">
+<h2><span class="header-section-number">3.2</span> Analysis setup<a href="pbj-software-overview.html#analysis-setup" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>This first step is to load <code>R</code> packages for performing interactive image analysis.</p>
+<ul>
+<li>The <code>pbj</code> package includes our functions needed to perform group level neuroimage analysis.</li>
+<li>The <code>papayaWidget</code> package is used to embed interactive visualizations into this html document.</li>
+</ul>
+<p>The <code>pbj</code> package includes dependencies for the following <a href="www.neuroconductor.org">Neuroconductor</a> packages</p>
+<ul>
+<li>The <code>RNifti</code> package for Nifti image I/O.</li>
+<li><code>oro.nifti</code> package for Nifti image I/O.</li>
+<li>The <code>fslr</code> package includes wrappers for command line tools included in FSL, which will be used to perform some basic preprocessing.</li>
+</ul>
+<p>In addition, we setup some variables used for all analyses: <code>ncores</code> specifies the number of cores to use when running parallel processes and setting the seed for the RNG ensures the results are reproducible.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="pbj-software-overview.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="do">### LIBRARIES </span><span class="al">###</span></span>
+<span id="cb2-2"><a href="pbj-software-overview.html#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pbj) <span class="co"># pbj package</span></span>
+<span id="cb2-3"><a href="pbj-software-overview.html#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RNifti) <span class="co"># Nifti I/O. Loaded with pbj</span></span>
+<span id="cb2-4"><a href="pbj-software-overview.html#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fslr) <span class="co"># for FSL utilities</span></span>
+<span id="cb2-5"><a href="pbj-software-overview.html#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(papayaWidget) <span class="co"># image viewer</span></span>
+<span id="cb2-6"><a href="pbj-software-overview.html#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(splines) <span class="co"># ns</span></span>
+<span id="cb2-7"><a href="pbj-software-overview.html#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(table1) <span class="co"># convenient table creation</span></span>
+<span id="cb2-8"><a href="pbj-software-overview.html#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(parallel) <span class="co"># for parallelization</span></span>
+<span id="cb2-9"><a href="pbj-software-overview.html#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(magrittr) <span class="co"># %&gt;%</span></span>
+<span id="cb2-10"><a href="pbj-software-overview.html#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="pbj-software-overview.html#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># number of cores for parallel processing</span></span>
+<span id="cb2-12"><a href="pbj-software-overview.html#cb2-12" aria-hidden="true" tabindex="-1"></a>ncores <span class="ot">=</span> <span class="dv">16</span></span>
+<span id="cb2-13"><a href="pbj-software-overview.html#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co"># seed for randomization</span></span>
+<span id="cb2-14"><a href="pbj-software-overview.html#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">555</span>)</span></code></pre></div>
+<p>It is easiest to compile all the files needed for the analysis into a few <code>R</code> objects.
+To perform the analysis, we need the following data</p>
+<ul>
+<li>The data file that includes
+<ol style="list-style-type: decimal">
+<li>All covariates required for the analysis.</li>
+<li>Paths to the <code>.nii.gz</code> images we will analyze, assumed to be spatially registered to template space.</li>
+</ol></li>
+<li>The mask to identify voxels to include in the analysis.</li>
+<li>A template image to use as the background for visualizing the results.</li>
+</ul>
+<p>We recommend storing the image paths as a column in a data frame with the covariates, so that correspondence between the outcome and covariates is retained throughout the analysis.</p>
+</div>
+<div id="software-structure-and-general-workflow" class="section level2 hasAnchor" number="3.3">
+<h2><span class="header-section-number">3.3</span> Software structure and general workflow<a href="pbj-software-overview.html#software-structure-and-general-workflow" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The key functions of the package are for model estimation, statistical inference, summarization, visualization, and I/O.</p>
+<p><strong>Model estimation:</strong></p>
+<ul>
+<li><a href="pbj-software-overview.html#lmPBJ"><code>lmPBJ</code></a> – the main function to estimate test statistics and coefficients for comparing two models.</li>
+</ul>
+<p><strong>Statistical inference:</strong></p>
+<ul>
+<li><a href="pbj-software-overview.html#pbjInference"><code>pbjInference</code></a> – the main function to perform inference on topological features of the test statistic image.</li>
+<li><code>cluster</code> – computes cluster statistics, such as cluster extent and cluster mass from a <code>niftiImage</code> object.</li>
+<li><code>maxima</code> – computes global or local maxima statistics from a <code>niftiImage</code> object.</li>
+<li><code>mmeStat</code> – computes maxima, mass, or extent statistics from a <code>niftiImage</code> object.</li>
+</ul>
+<p><strong>Summarization:</strong></p>
+<ul>
+<li><code>table.statMap</code> – create maxima/mass/cluster summary table.</li>
+<li><code>summary.statMap</code> – summarize the <code>statMap</code> object in terminal.</li>
+</ul>
+<p><strong>Visualization:</strong></p>
+<ul>
+<li><code>image.statMap</code> – lightbox visualization (and others) of <code>statMap</code> object.</li>
+<li><code>image.niftiImage</code> – lightbox visualization (and others) of <code>niftiImage</code> class, defined in <code>RNifti</code> package.</li>
+</ul>
+<p><strong>I/O:</strong></p>
+<ul>
+<li><code>stat.statMap</code> – extract statistical image as <code>-log10(p)</code>, effect size (robust effect size index; RESI), or chi-squared statistic from <code>statMap</code> object as a <code>niftiImage</code> object.</li>
+<li><code>coef.statMap</code> – extract 4d coefficient image from <code>statMap</code> object as a <code>niftiImage</code> object. Coefficients correspond to the parameters tested by comparing the full and reduced models.</li>
+<li><code>write.statMap</code> – write out files in <code>statMap</code> object to a specified directory.</li>
+</ul>
+<div id="lmPBJ" class="section level3 hasAnchor" number="3.3.1">
+<h3><span class="header-section-number">3.3.1</span> Model estimation using the <code>lmPBJ</code> function<a href="pbj-software-overview.html#lmPBJ" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The <code>lmPBJ</code> function fits linear models to imaging data and computes test statistics for parameters of interest.
+The <code>pbj</code> package uses <code>R</code>’s <code>formula</code> syntax to specify models of imaging data using the full/reduced model specification to test variables in the data set.
+The full model, <code>lmfull</code>, specifies a formula that includes all model terms.
+There is no left side to the equation (the dependent/outcome variable) because it is determined by the imaging variables.
+Comparing <code>lmfull</code> to <code>lmred</code> will test the terms of the full model that are related to the interaction.
+The <code>mask</code> image identifies which voxels in the image to include in the analysis.
+The <code>template</code> image is used as the background image for visualization later.</p>
+<p>There are many other options to adjust how to fit the model and compute test statistics; statistical details are given above in <a href="methods.html#pbj-analysis-methods">PBJ analysis methods</a>.
+The
+Unlike the parametric Gaussian random field methods implemented in many software packages, the methods used in <code>pbj</code> yield cluster extent p-values that are valid regardless of data smoothness, or cluster-forming threshold (CFT) and perform well in small samples.
+<code>pbj</code> also supports the permutation procedure similar to what is implemented in FSL’s <code>randomise</code> <span class="citation">(<a href="#ref-winkler_permutation_2014" role="doc-biblioref">Winkler et al. 2014</a>)</span>.</p>
+<ul>
+<li><code>id</code> – for longitudinal or repeated measurements an integer or factor variable indicating which rows come from the same study participants.</li>
+<li><code>robust</code> – a logical specifying whether robust standard errors should be used, which makes the test statistics valid even under some types of model
+misspecification. The robust test statistic ensures that the standard errors are consistently estimated, even if homoskedasticity is violated. It reduces replicability slightly at the cost of reducing bias of the test statistic, <span class="math inline">\(p\)</span>-values, and effect sizes estimates (Section REF).</li>
+<li><code>transform</code> – Use and inverse CDF transformation to make the test statistics appear closer to a normal distribution in small sample sizes. This is a sensible transformation if the null hypothesis is true, but might not be a good idea if the null is false.</li>
+<li><code>HC3</code> – whether to use a small sample adjustment to the robust standard error estimates that improves coverage performance (it makes the test statistics appear closer to a normal distribution).</li>
+</ul>
+<p>The result of <code>lmPBJ</code> is a <code>statMap</code> object, which is a <code>list</code> containing all the elements needed for visualization and downstream analysis. At this stage, uncorrected results can be summarized and visualized using the functions described above.
+The statistical values are stored as chi-squared statistics because this is the most general random variable use for statistical inference.</p>
+</div>
+<div id="pbjInference" class="section level3 hasAnchor" number="3.3.2">
+<h3><span class="header-section-number">3.3.2</span> Statistical inference using the <code>pbjInference</code> function<a href="pbj-software-overview.html#pbjInference" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>There are many different options for performing inference of topological features for neuroimaging data and the <code>pbjInference</code> function can accommodate a wide range of possibilities.
+It is best to include any inference methods you want to consider all together, so that you don’t have to rerun the bootstrap or permutation procedure each time.
+Here are some key arguments to the <code>pbjInference</code>:</p>
+<ul>
+<li><code>statMap</code> – the object returned by lmPBJ.</li>
+<li><code>statistic</code> – a function used to compute common topological features of the image.</li>
+<li><code>null</code> – whether to perform resampling under the null or alternative hypothesis.</li>
+<li><code>nboot</code> – the number of bootstraps to perform.</li>
+<li><code>method</code> – controls what resampling procedure to use.</li>
+<li><code>cft_s</code>, <code>cft_p</code>, <code>cft_chisq</code> – cluster forming threshold, used to compute a <code>cft</code> variable that is an argument to the <code>statistic</code> function.</li>
+<li><code>...</code> – arguments passed to the <code>statistic</code> function.</li>
+<li><code>rdata_rds</code> – a file to write the output to. If specified, it will run the bootstrap in the background.</li>
+<li><code>mc.cores</code> – the number of cores to use for parallelization.</li>
+</ul>
+<p>After the <code>statMap</code> argument, the <code>statistic</code> function is the most important argument, because it determines what type of topological features to perform inference on.
+The <code>statistic</code> argument is a function itself, that takes a <code>niftiImage</code> object as the first argument and computes some topological feature of the image and returns them as a named list.
+It, optionally, includes other arguments to modify its behavior. These arguments can be specified when running <code>pbjInference</code> by passing them as named arguments.
+The <code>mmeStat</code> function is the default value for the <code>statistic</code> argument of <code>pbjInference</code> and includes options to run inference on the most common types of topological features, including local maxima, cluster mass inference, and cluster extent inference. There are also the functions <code>maxima</code> and <code>cluster</code> that can be used to compute local maxima or cluster-based statistics separately.
+The <code>statistic</code> function can take <code>mask</code> and <code>cft</code> arguments.
+The <code>mask</code> is automatically assigned from the <code>statMap</code> object and the <code>cft</code> argument is determined automatically by the <code>cft_s</code> and <code>cft_p</code> arguments in <code>pbjInference</code>.
+Because cluster based inference is so common, there are convenience arguments that take a cluster forming threshold as an effect size (<code>cft_s</code>; on the RESI scale <span class="citation">(<a href="#ref-vandekar_robust_2020" role="doc-biblioref">S. Vandekar, Tao, and Blume 2020</a>; <a href="#ref-kang_accurate_2023" role="doc-biblioref">Kang et al. 2023</a>)</span>), a <span class="math inline">\(p\)</span>-value (<code>cft_p</code>), or a chi-squared value (<code>cft_chisq</code>).
+These arguments are converted to a <code>cft</code> variable internally that is on the chi-squared statistical scale.
+These arguments are optional if the topological feature is not a function of an image threshold.
+For topological features that use the <code>cft</code> variable this is stored as an attribute of that element of the <code>statistic</code> output, which is used for visualization later.</p>
+<p>The result is the input <code>statMap</code> object, with a <code>pbj</code> object added as an element in the list.
+Summarization and visualization functions check for the <code>pbj</code> field and provide inference results based on what fields are available.</p>
+</div>
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-kang_accurate_2023" class="csl-entry">
+Kang, Kaidi, Megan T. Jones, Kristan Armstrong, Suzanne Avery, Maureen McHugo, Stephan Heckers, and Simon Vandekar. 2023. <span>“Accurate <span>Confidence</span> and <span>Bayesian</span> <span>Interval</span> <span>Estimation</span> for <span>Non</span>-Centrality <span>Parameters</span> and <span>Effect</span> <span>Size</span> <span>Indices</span>.”</span> <em>Psychometrika</em>, February. <a href="https://doi.org/10.1007/s11336-022-09899-x">https://doi.org/10.1007/s11336-022-09899-x</a>.
+</div>
+<div id="ref-vandekar_robust_2020" class="csl-entry">
+Vandekar, Simon, Ran Tao, and Jeffrey Blume. 2020. <span>“A <span>Robust</span> <span>Effect</span> <span>Size</span> <span>Index</span>.”</span> <em>Psychometrika</em> 85 (1): 232–46. <a href="https://doi.org/10.1007/s11336-020-09698-2">https://doi.org/10.1007/s11336-020-09698-2</a>.
+</div>
+<div id="ref-winkler_permutation_2014" class="csl-entry">
+Winkler, Anderson M., Gerard R. Ridgway, Matthew A. Webster, Stephen M. Smith, and Thomas E. Nichols. 2014. <span>“Permutation Inference for the General Linear Model.”</span> <em>Neuroimage</em> 92: 381–97.
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="methods.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="pbj-tutorials.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="assets/gitbook-2.6.7/js/app.min.js"></script>
+<script src="assets/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="assets/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="assets/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="assets/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="assets/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="assets/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="assets/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": false,
+"toc": {
+"collapse": "subsection"
+},
+"toolbar": {
+"position": "static"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
