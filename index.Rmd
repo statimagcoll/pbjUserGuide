@@ -52,7 +52,7 @@ We downloaded fully processed amplitude of low frequency fluctuations (ALFF) [@z
 The ABIDE is a collaboration of 16 international sites that have aggregated and openly share neuroimaging data from 1,112 scanning sessions, including 539 individuals with autism spectrum disorder [@di_martino_autism_2014].
 A total of nine subjects were excluded due to poor image quality yielding a study mask with 30,272 voxels.
 This minimal data quality screening was performed in order to maximize the data available for the simulation analyses presented in prior work [@vandekar_improving_2021].
-These data are available for download through the open connectome website and code to perform the download is available below (Section XX).
+These data are available for download through the open connectome website and a function to perform the download is available in the `NIsim` package (Section XX).
 
 ### Twenty-one pain studies
 
@@ -63,19 +63,114 @@ These data are available in the `pain21` R package that is available for downloa
 
 Details of data processing and quality assurance are provided in the Supplement. Briefly, prior to processing, 695 people with demographics and T1 images were visually inspected for quality. A total of 14 scans were excluded because they failed processing or had significant motion or artifacts.
 VBM was conducted in the Computational Anatomy Toolbox 12 (CAT12: Version 12.5) in Statistical Parametric Mapping 12  [@ashburner_unified_2005; @ashburner_computational_2009].
-After estimation the VBM images were registered to the MNI template and downsampled to 2mm isotropic resolution [ashburner_fast_2007].
+After estimation the VBM images were registered to the MNI template and downsampled to 2mm isotropic resolution [@ashburner_fast_2007].
 To further speed computation for the simulations, we restrict the study region to 11 axial slices in the center of the image, which included 51,925 voxels.
 
 
 
 ## PBJ analysis methods
 
+We consider group-level analysis where there is a single image for each subject:
+let $Y_i(v)$ denote the image for subject $i=1,\ldots, n$, which measures a biological or physiological value, such as brain activation to a task, blood flow, resting connectivity with a target brain region, or structural features in gray or white matter.
+The image is indexed by the voxel location, $v$. 
+We assume that [@vandekar_robust_2019]
+\begin{align}\label{eq:model}
+\begin{split}
+Y_i(v) & = X_{i0} \beta_0(v) + X_{i1} \beta_1(v) + E_i(v)\\
+& = X_i \zeta(v) + E_i(v),
+\end{split}
+\end{align}
+where $X_{i0} \in \R^{m_0}$ is a row vector of nuisance covariates including the intercept, $X_{i1}\in \R^{m_1}$ is a row vector of variables of interest, $m=m_0 + m_1$, $X_i = [ X_{i0}, X_{i1}]$, $\beta_0(v)$, and $\beta_1(v) $ are parameter image vectors that take values in $\R^{m_0}$ and $\R^{m_1}$, respectively; $\beta(v) = [\beta_0(v)^T, \beta_1(v)^T ]^T$, and $E_i(v)$ is an error term with $\E\{ E_i(v)\} = 0$ and spatial covariance function $\Sigma_i(v, w)  = \Cov\left\{E_i(v), E_i(w)\right\} < \infty$ for all voxels $v,w$.
+This covariance depends upon the subscript $i$ intentionally to account for differences in the covariance between subjects.
+Here, all capital letters denote random variables and we require that $\mathrm{Cov}(X_i)$ is positive definite.
+%Throughout, we assume that the conditional mean $\E\{ Y_i(\mathbf{v}) \mid \mathbf{X}_i\} = \mathbf{X}_i \zeta(\mathbf{v})$ of model \eqref{eq:model} is correctly specified.
+%This model is a form of function-on-scalar regression [@ramsay_TF_2005; @reiss_fast_2010; @morris_TF_2015] and encompasses many models of interest in image analysis.
+Lastly, let $X_0 = (X_{10}^T, \ldots, X_{n0}^T) \in \R^{n\times m_0}$, $X_1 = (X_{11}^T, \ldots, X_{n1}^T) \in \R^{n\times m_1}$, $X = [X_0, X_1]$, $Y(v) = [Y_1(v), \ldots, Y_n(v)]^T$.
+In our previous paper we considered weighted least squares regression;
+to simplify notation here, we consider unweighted least squares estimation, but the weighted least squares of of an outcome imaging data $\tilde Y(v)$ onto covariates $\tilde X$ with weights $W(v)$ is equivalent to least squares with $Y(v) = W^{1/2}(v) \tilde Y(v)$ onto $X(v) = W^{1/2}(v) \tilde X$.
+It is also possible that $X$ depends on location $v$, but resampling in this case becomes very computationally intensive, so is not discussed here.
+
+Throughout this paper, we discuss estimation of the joint distribution of a test statistic image, $T_n(v)$, in finite samples, under the null hypothesis
+\begin{equation}
+\label{eq:null}
+H_0(v): \beta(v) = 0 \text{ for all $v$},
+\end{equation}
+for the purpose of estimating the distribution of functions of $T_n(v)$, such as the maximum statistic across the image and the maximum cluster size.
+
+The methods we describe below can be used more generally than this context, but the procedures used for resampling will likely be context dependent.
+For example, a similar approach could be used for sampling from the joint distribution of a multivariate statistic derived from a linear mixed model or generalized estimating equations with an image or other multivariate outcome [@bernal-rusiel_statistical_2013; @guillaume_fast_2014].
+
 ### Model estimation
 
-### Statistical inference
+### Resampling procedures
 
+We describe each of the resampling methods in terms a vector of approximately standard normal random variables, $Z_n(v)$ that are a function of the parameter estimators and their variance estimators, and whose sum of squares is proportional to the test statistic image
+\[
+T_n(v) = n \times Z_n^T(v)Z_n^T(v).
+\]
+Details to derive $Z_n(v)$ are given in the Appendix.
+Briefly,
+let $A$ and $B(v,w)$ be the  ``bread" and ``meat" components of the sandwich covariance matrix for the estimator image $\hat \beta(v)$ [@vandekar_robust_2019,@boos_essential_2013,@huber_robust_1964].
+$A$ only depends on the design matrix $X$, so is not a function of voxel locations, $v$ and $w$.
+We denote their estimators with a hat, such as $\hat B(v, w)$.
+These matrices are derived in the context of M-estimation, where the matrix $A$ is the limit of the second derivative of the least squares estimating equation (given in the supplement) and $B$ is the limit of the expected value of the outer product of the first derivative of the least squares estimating equation [@vandekar_robust_2019].
+Throughout, when $v=w$ we write $B(v,v)=B(v)$ to simplify notation.
+$\hat B(v)$ depends on $v$ only through $Y(v)$, so we will write $B(v) = B\{Y(v)\}$ to express it as a function of $Y(v)$.  $\Sigma_{\beta}(v)$ denotes the asymptotic covariance of $\sqrt{n} \hat \beta(v)$ and is a function of $A$ and $B$. Using this notation,
+\begin{equation}
+\label{eq:normalizedEstimator}
+Z_n(v) := \hat\sigma^{-1}(v)\hat A^{-1/2} X_1^T R_0 Y(v),
+\end{equation}
+for the parametric test statistic and
+\begin{equation}
+\label{eq:robustNormalizedEstimator}
+Z_n^{\text{Rob}}(v) := \hat B^{-1/2}(v) \hat A \{\hat\beta(v) - \beta_0(v)\}
+= \hat B^{-1/2}\{Y(v)\} X_1^T R_0 Y(v),
+\end{equation}
+for the robust test statistic.
+This notation allows us to easily describe how each of the resampling procedures computes $Z_n(v)$ using the outcome images $Y(v)$, which gives us the joint distribution of the test statistic image $T_n(v)$.
+Our goal to estimate the distribution of TF of the test statistic image can be achieved by reproducing the joint distribution of $Z_n(v)$.
 
-#### Selecting effect size CFTs
+Many resampling procedures to estimate the joint distribution of $Z_{n}(v)$ can be expressed in terms of \eqref{eq:normalizedEstimator} or \eqref{eq:robustNormalizedEstimator}.
+Throughout this section we let $Z_n^{(r)}(v)$ denote an arbitrary resampled version of the parametric or robust estimator.
+
+#### Permutation procedure
+
+The Freedman-Lane permutation procedure is the most commonly used permutation procedure in neuroimaging [@winkler_permutation_2014; @winkler_multi-level_2015; @winkler_faster_2016; @nichols_multiple_2012]. It assumes exchangeability conditional on the mean under the null \eqref{eq:null},
+\begin{equation}\label{eq:permutationExchangeability}
+\P(\{Y_i(v) - X_{i,0}\beta_0(v)\} \mid X_{i,0}, X_{i,1}, \beta_0(v)) = \P(\{Y_j(v) - X_{j,0}\beta_0(v)\} \mid X_{j,0}, X_{j,1}, \beta_0(v)).
+\end{equation}
+Since $\beta_0(v)$ is unknown, the method conditions on an estimate of $\beta_0(v)$ and draws a sample from the joint distribution of $Z_n(v)$ using a random permutation matrix $P$ \citep{winkler_permutation_2014},
+\begin{align}
+\begin{aligned}\label{eq:permutationSampleExchangeability}
+Y_p(v) & = P[Y(v) - X_0\hat\beta_0(v)] \\
+Z_n^{(r)}(v) & = \hat B^{-1/2}\{Y_p(v)\} X_1^T R_0 Y_p(v).
+\end{aligned}
+\end{align}
+Note that, because the permutation breaks any possible dependence between the variance of $Y(v)$ and $X_1$, it does not accommodate heteroskedasticity; this approach may reject if the null \eqref{eq:null} is true, but \eqref{eq:permutationExchangeability} is not.
+
+#### Wild bootstrap methods
+We consider wild bootstrap methods to sample the outcome images, $Y(v)$, and compute the test statistics \citep{wu_jackknife_1986,efron_introduction_1994}.
+%Our parametric bootstrap procedure \citep{vandekar_robust_2019} falls under this wild bootstrap approach, but samples the distribution of the test statistics directly, conditioning on the spatial covariance matrix (see below).
+The wild bootstrap preserves the association between the residuals and the covariates so that it reproduces unequal variance if it exists in the population.
+The procedure computes the resampled test statistic,
+\begin{align}
+Y^b(v) & = \text{diag}[(RY(v))_{i}/R_{ii}]Z  \label{eq:radBoot}\\
+Z_n^{(r)}(v) & = \hat B^{-1/2}\{Y^b(v)\} X_1^T R_0 Y^b(v) \label{eq:sPBJboot}
+\end{align}
+where $Z \in \R^n$ is a random variable generated computationally.
+We consider two wild bootstrap methods based on methods that were effective in similar settings [@bowring_spatial_2019; @sommerfeld_confidence_2018; @djogbenou_asymptotic_2019; @guillaume_fast_2014]: the first samples the elements of $Z$ as independent normal random variables and the second samples the elements of $Z$ as independent Rademacher random variables, which take the values -1 and 1 with equal probability. 
+This is equivalent to sign flipping the residuals, so assumes symmetric errors, but does not assume exchangeability because the residuals are not permuted \citep{winkler_permutation_2014}.
+Dividing by the diagonal of the residual forming matrix, $R_{ii}$, is a jackknife approximation that adjusts for the bias of the squared residual \citep{long_using_2000,mackinnon_heteroskedasticity-consistent_1985}.
+Our previous approach \citep{vandekar_semiparametric_2019} conditioned on the covariance matrix:
+\begin{align*}
+Z_n^{(r)}(v) & = \hat B^{-1/2}\{Y(v)\} X_1^T R_0 Y^b(v),
+\end{align*}
+where $Y^b(v)$ is as defined in \eqref{eq:radBoot}.
+In simulations, we have found this procedure does not accurately reproduce the distribution of the test statistics in small samples.
+[@bowring_spatial_2019] also found that conditioning on the covariance estimator does not work well.
+Instead, our approach here is similar to a wild t-bootstrap [@bowring_spatial_2019; @telschow_simultaneous_2019], and simplifies to the wild t-bootstrap using the parametric test statistic \eqref{eq:normalizedEstimator}.
+For all procedures, we apply a T to Z quantile transformation to $Z_n(v)$, which we have found improves the convergence rate of the test statistics $T_n(v)$ to their asymptotic distribution [@andekar_robust_2019].
+
 
 ## Evaluation under the global null hypothesis
 
